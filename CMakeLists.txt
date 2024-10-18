@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS WebSockets)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -27,7 +28,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         loginscene.h loginscene.cpp
         registwidget.h registwidget.cpp registwidget.ui
         rgtcfmwidget.h rgtcfmwidget.cpp rgtcfmwidget.ui
-        statuswidget.h statuswidget.cpp
+        websocketconnect.h websocketconnect.cpp
+        tempconnect.h tempconnect.cpp
+
 
     )
 # Define target properties for Android with Qt 6 as:
@@ -49,6 +52,7 @@ else()
 endif()
 
 target_link_libraries(chat_client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(chat_client PRIVATE Qt6::WebSockets)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

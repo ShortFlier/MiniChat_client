@@ -2,24 +2,26 @@
 #define LOGINSCENE_H
 
 #include <QMainWindow>
+#include <QLabel>
 
 #include "loginwidget.h"
 #include "registwidget.h"
 #include "rgtcfmwidget.h"
-#include "statuswidget.h"
 
 class LoginScene : public QMainWindow
 {
     Q_OBJECT
 public:
+    enum status{online, disonline};
     explicit LoginScene(QWidget *parent = nullptr);
+    void setStatus(status s);
 
 private:
-    StatusWidget* statusWidget;
-
     LoginWidget* loginWidget;
     RegistWidget* registWidget;
     RgtCfmWidget* rgtCfmWidget;
+
+    QLabel* statusLabel;
 
 signals:
 

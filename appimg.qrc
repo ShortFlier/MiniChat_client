@@ -2,7 +2,6 @@
     <qresource prefix="/">
         <file>img/app_icon.png</file>
         <file>img/background.jpg</file>
-        <file>img/disonline.png</file>
-        <file>img/online.png</file>
+        <file>assets/server_address.txt</file>
     </qresource>
 </RCC>

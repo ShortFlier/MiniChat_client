@@ -1,4 +1,7 @@
 #include "loginscene.h"
+#include "tempconnect.h"
+
+#include <QStatusBar>
 
 LoginScene::LoginScene(QWidget *parent)
     : QMainWindow{parent}
@@ -7,18 +10,18 @@ LoginScene::LoginScene(QWidget *parent)
     setWindowIcon(QIcon(":/img/app_icon.png"));
     setWindowTitle("MiniChat");
     setFixedWidth(320);
-    setFixedHeight(530);
-
-    statusWidget=new StatusWidget(this);
+    setFixedHeight(500);
 
     loginWidget=new LoginWidget(this);
-    loginWidget->move(loginWidget->pos()+QPoint(0,30));
     registWidget=new RegistWidget(this);
-    registWidget->move(registWidget->pos()+QPoint(0,30));
     rgtCfmWidget=new RgtCfmWidget(this);
-    rgtCfmWidget->move(rgtCfmWidget->pos()+QPoint(0,30));
     registWidget->hide();
     rgtCfmWidget->hide();
+
+    //状态栏
+    QStatusBar* sbar = statusBar();
+    statusLabel=new QLabel(sbar);
+    setStatus(disonline);
 
     //页面切换
     connect(loginWidget, &LoginWidget::swap, [this](){
@@ -43,4 +46,30 @@ LoginScene::LoginScene(QWidget *parent)
         rgtCfmWidget->email(email);
         rgtCfmWidget->show();
     });
+
+    //服务器连接
+    TempConnect* tempSocket=new TempConnect(this);
+    connect(tempSocket, &TempConnect::connected, [this](){
+        setStatus(online);
+    });
+    connect(tempSocket, &TempConnect::closed, [this](){
+        setStatus(disonline);
+    });
+}
+
+void LoginScene::setStatus(status s)
+{
+    QString msg;
+    QString color;
+    switch(s){
+    case online:
+        msg="已连接"; color="#005500"; break;
+    case disonline:
+        msg="未连接"; color="red"; break;
+    default:
+        msg="未连接"; color="red";
+    }
+    statusLabel->setText(msg);
+    QString style("color: %1;font-size:16px;font-weight:bold;");
+    statusLabel->setStyleSheet(style.arg(color));
 }
