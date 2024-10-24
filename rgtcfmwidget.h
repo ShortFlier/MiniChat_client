@@ -21,6 +21,10 @@ public:
 signals:
     void back();
     void home();
+    //重新发送验证码
+    void again_code(QString email, unsigned int id);
+    //注册提交
+    void submit(QString email, QString code, unsigned int id);
 
 private slots:
     void on_back_clicked();
@@ -33,6 +37,7 @@ private slots:
 
 private:
     Ui::RgtCfmWidget *ui;
+    QString _email;
 };
 
 #endif // RGTCFMWIDGET_H

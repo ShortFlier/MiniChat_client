@@ -1,5 +1,5 @@
 #include "loginscene.h"
-#include "tempconnect.h"
+
 
 #include <QStatusBar>
 
@@ -48,13 +48,19 @@ LoginScene::LoginScene(QWidget *parent)
     });
 
     //服务器连接
-    TempConnect* tempSocket=new TempConnect(this);
+    tempSocket=new TempConnect(this);
     connect(tempSocket, &TempConnect::connected, [this](){
         setStatus(online);
     });
     connect(tempSocket, &TempConnect::closed, [this](){
         setStatus(disonline);
     });
+
+    //槽函数连接
+    connect(loginWidget, &LoginWidget::login, tempSocket, &TempConnect::login); //登入
+    connect(registWidget, &RegistWidget::submit, tempSocket, &TempConnect::register_email);//注册——邮箱提交
+    connect(rgtCfmWidget, &RgtCfmWidget::again_code, tempSocket, &TempConnect::register_code);//请求重新发送验证码
+    connect(rgtCfmWidget, &RgtCfmWidget::submit, tempSocket, &TempConnect::register_submit);//提交验证码
 }
 
 void LoginScene::setStatus(status s)

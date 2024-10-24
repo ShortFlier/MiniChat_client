@@ -30,6 +30,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         rgtcfmwidget.h rgtcfmwidget.cpp rgtcfmwidget.ui
         websocketconnect.h websocketconnect.cpp
         tempconnect.h tempconnect.cpp
+        datahead.h datahead.cpp
+        webdistb.h webdistb.cpp
 
 
     )

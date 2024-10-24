@@ -20,7 +20,7 @@ public:
 
 signals:
     void swap();
-    void submit(const QString& email);
+    void submit(const QString& email, unsigned int id);
 
 private slots:
     void on_back_clicked();

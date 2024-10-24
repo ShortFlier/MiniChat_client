@@ -76,7 +76,8 @@ void LoginWidget::on_login_clicked()
         pwdErr("密码格式错误");
         return;
     }
-    qDebug()<<account<<":"<<password;
+    //登入
+    emit login(account, password, 26);
 }
 
 void LoginWidget::actErr(const QString& msg)

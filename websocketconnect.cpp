@@ -14,10 +14,14 @@ WebSocketConnect::WebSocketConnect(QObject *parent)
     connect(socket, &QWebSocket::disconnected, [this](){
         qDebug()<<"连接断开";
         emit closed();
-        if(active==true){
-            connectToServer();
-        }
+        connectToServer();
     });
+}
+
+WebSocketConnect::WebSocketConnect(WebSocketConnect &&wsc)
+{
+    socket=wsc.socket;
+    wsc.socket=nullptr;
 }
 
 QUrl WebSocketConnect::loadServerAddresss()
@@ -46,9 +50,10 @@ void WebSocketConnect::connectToServer()
 }
 
 WebSocketConnect::~WebSocketConnect(){
-    active=false;
-    emit closed();
-    socket->close();
-    qDebug()<<"连接已关闭";
-    socket->deleteLater();
+    if(socket!=nullptr){
+        emit closed();
+        socket->close();
+        qDebug()<<"连接已关闭";
+        socket->deleteLater();
+    }
 }

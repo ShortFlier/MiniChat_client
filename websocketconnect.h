@@ -9,8 +9,11 @@ class WebSocketConnect : public QObject
     Q_OBJECT
 public:
     explicit WebSocketConnect(QObject *parent = nullptr);
+    //移动构造
+    explicit WebSocketConnect(WebSocketConnect&& wsc);
     virtual ~WebSocketConnect()=0;
     static QUrl loadServerAddresss();
+    QWebSocket* getSocket(){ return socket; }
 
 signals:
     void connected();
@@ -18,7 +21,6 @@ signals:
 
 protected:
     QWebSocket* socket;
-    bool active=true;
 
 private:
     void connectToServer();

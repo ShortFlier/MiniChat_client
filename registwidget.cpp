@@ -62,6 +62,6 @@ void RegistWidget::on_submit_clicked()
         return;
     }
     //注册程序开启
-    emit submit(email);
+    emit submit(email, 26);
 }
 

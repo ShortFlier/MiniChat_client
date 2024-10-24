@@ -25,7 +25,10 @@ RgtCfmWidget::~RgtCfmWidget()
 
 void RgtCfmWidget::email(const QString &email)
 {
-    ui->email->setText(email);
+    _email=email;
+    ui->email->setText(_email);
+    //发送验证码
+
 }
 
 void RgtCfmWidget::paintEvent(QPaintEvent *)
@@ -64,6 +67,7 @@ void RgtCfmWidget::on_again_clicked()
         ui->again->setDisabled(false);
     });
     //重新发送验证码
+    emit again_code(_email, 26);
 }
 
 //点击注册
@@ -71,8 +75,10 @@ void RgtCfmWidget::on_submit_clicked()
 {
     ui->error->close();
     QString code=ui->code->text().trimmed();
-    if(code.length()==0)
+    if(code.length()==0){
         error("验证码不能为空");
-    qDebug()<<code;
+        return;
+    }
+    emit submit(_email, code, 26);
 }
 

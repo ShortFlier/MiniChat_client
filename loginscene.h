@@ -7,6 +7,7 @@
 #include "loginwidget.h"
 #include "registwidget.h"
 #include "rgtcfmwidget.h"
+#include "tempconnect.h"
 
 class LoginScene : public QMainWindow
 {
@@ -22,6 +23,8 @@ private:
     RgtCfmWidget* rgtCfmWidget;
 
     QLabel* statusLabel;
+
+    TempConnect* tempSocket;
 
 signals:
 
