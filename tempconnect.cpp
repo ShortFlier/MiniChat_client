@@ -1,6 +1,9 @@
 #include "tempconnect.h"
 #include "datahead.h"
 
+#include <QJsonObject>
+#include <QJsonDocument>
+
 TempConnect::TempConnect(QObject *parent)
     : WebSocketConnect{parent}
 {}
@@ -12,10 +15,13 @@ TempConnect::~TempConnect()
 
 void TempConnect::login(QString account, QString password, unsigned int id)
 {
-    qDebug()<<"login: "<<account<<" | "<<password;
     if(socket->state()==QAbstractSocket::ConnectedState){
         QString url=DataHead::getUrl(DataHead::http, DataHead::request, "login", QString::number(id));
-        socket->sendTextMessage(url);
+        QJsonObject data;
+        data.insert("account", account);
+        data.insert("password", password);
+        QJsonDocument jd(data);
+        socket->sendTextMessage(url+jd.toJson());
     }
 }
 

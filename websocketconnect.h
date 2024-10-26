@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWebSocket>
+#include "datahead.h"
 
 class WebSocketConnect : public QObject
 {
@@ -14,6 +15,7 @@ public:
     virtual ~WebSocketConnect()=0;
     static QUrl loadServerAddresss();
     QWebSocket* getSocket(){ return socket; }
+    void sendText(DataHead& head, DataResult& result);
 
 signals:
     void connected();

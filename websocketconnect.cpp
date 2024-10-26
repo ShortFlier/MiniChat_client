@@ -16,12 +16,20 @@ WebSocketConnect::WebSocketConnect(QObject *parent)
         emit closed();
         connectToServer();
     });
+    connect(socket, &QWebSocket::textMessageReceived, [](const QString& msg){
+        qDebug()<<msg;
+    });
 }
 
 WebSocketConnect::WebSocketConnect(WebSocketConnect &&wsc)
 {
     socket=wsc.socket;
     wsc.socket=nullptr;
+}
+
+void WebSocketConnect::sendText(DataHead &head, DataResult &result)
+{
+    socket->sendTextMessage(head.getUrl()+result.data());
 }
 
 QUrl WebSocketConnect::loadServerAddresss()

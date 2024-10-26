@@ -2,6 +2,7 @@
 #define DATAHEAD_H
 
 #include <QObject>
+#include <qjsondocument.h>
 
 class DataHead : public QObject
 {
@@ -38,6 +39,23 @@ public:
     QString* _http_type=nullptr;
     QString* _tpid=nullptr;
     QString* _path=nullptr;
+};
+
+class DataResult{
+public:
+    DataResult(){}
+    DataResult(const int& code, const QJsonDocument& jsdata):code(code),jsdata(jsdata){}
+    DataResult(const QString& datastr);
+    //合并code和jsdata,转成格式可以发送的数据部分
+    QString data() const;
+    static DataResult error(const QString& msg);
+
+public:
+    enum code_result{code_success=200, code_error=400};
+public:
+    int code=0;
+    QJsonDocument jsdata;
+
 };
 
 #endif // DATAHEAD_H
