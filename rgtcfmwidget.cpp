@@ -1,8 +1,10 @@
 #include "rgtcfmwidget.h"
 #include "ui_rgtcfmwidget.h"
 
+#include <QMessageBox>
 #include <QPainter>
 #include <QTimer>
+#include <QJsonObject>
 
 RgtCfmWidget::RgtCfmWidget(QWidget *parent)
     : QWidget(parent)
@@ -45,6 +47,15 @@ void RgtCfmWidget::error(const QString &msg)
     qDebug()<<msg;
 }
 
+void RgtCfmWidget::handler(DataHead &head, DataResult &result)
+{
+    //注册成功跳转登入界面
+    if(result.code==DataResult::code_success){
+        on_home_clicked();
+    }else
+        QMessageBox::critical(nullptr, "错误", result.jsdata.object().value("msg").toString());
+}
+
 void RgtCfmWidget::on_back_clicked()
 {
     emit back();
@@ -67,7 +78,7 @@ void RgtCfmWidget::on_again_clicked()
         ui->again->setDisabled(false);
     });
     //重新发送验证码
-    emit again_code(_email, 26);
+    emit again_code(_email);
 }
 
 //点击注册
@@ -79,6 +90,6 @@ void RgtCfmWidget::on_submit_clicked()
         error("验证码不能为空");
         return;
     }
-    emit submit(_email, code, 26);
+    emit submit(_email, code);
 }
 

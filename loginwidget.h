@@ -20,7 +20,7 @@ public:
 
 signals:
     void swap();
-    void login(QString account, QString password, unsigned int id);
+    void login(QString account, QString password);
 
 private slots:
     void on_regist_clicked();

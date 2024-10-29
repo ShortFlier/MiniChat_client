@@ -33,6 +33,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         tempconnect.h tempconnect.cpp
         datahead.h datahead.cpp
         webdistb.h webdistb.cpp
+        wapplication.h wapplication.cpp
+        validconnect.h validconnect.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET chat_client APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

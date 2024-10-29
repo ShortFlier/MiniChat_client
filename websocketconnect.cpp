@@ -16,9 +16,6 @@ WebSocketConnect::WebSocketConnect(QObject *parent)
         emit closed();
         connectToServer();
     });
-    connect(socket, &QWebSocket::textMessageReceived, [](const QString& msg){
-        qDebug()<<msg;
-    });
 }
 
 WebSocketConnect::WebSocketConnect(WebSocketConnect &&wsc)

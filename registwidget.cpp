@@ -3,6 +3,8 @@
 
 #include <QPainter>
 #include <QRegularExpression>
+#include <QMessageBox>
+#include <QJsonObject>
 
 RegistWidget::RegistWidget(QWidget *parent)
     : QWidget(parent)
@@ -45,7 +47,7 @@ void RegistWidget::on_submit_clicked()
 {
     ui->error->close();
     //验证邮箱格式合法性
-    QString email=ui->email->text().trimmed();
+    email=ui->email->text().trimmed();
     if(email.length()==0){
         error("邮箱不能为空");
         ui->email->setText("");
@@ -62,6 +64,16 @@ void RegistWidget::on_submit_clicked()
         return;
     }
     //注册程序开启
-    emit submit(email, 26);
+    emit submit(email);
+}
+
+void RegistWidget::handler(DataHead &head, DataResult &result)
+{
+    qDebug()<<result.code;
+    if(result.code==DataResult::code_success){
+        emit torgtcfm(email);
+    }else{
+        QMessageBox::critical(nullptr, "错误", result.jsdata.object().value("msg").toString());
+    }
 }
 

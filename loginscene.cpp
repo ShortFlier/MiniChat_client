@@ -1,7 +1,9 @@
 #include "loginscene.h"
 
 
+#include <QMessageBox>
 #include <QStatusBar>
+#include <QJsonObject>
 
 LoginScene::LoginScene(QWidget *parent)
     : QMainWindow{parent}
@@ -40,8 +42,8 @@ LoginScene::LoginScene(QWidget *parent)
         rgtCfmWidget->hide();
         loginWidget->show();
     });
-    //邮箱验证合法
-    connect(registWidget, &RegistWidget::submit, [this](const QString& email){
+    //
+    connect(registWidget, &RegistWidget::torgtcfm, [this](const QString& email){
         registWidget->hide();
         rgtCfmWidget->email(email);
         rgtCfmWidget->show();
@@ -49,6 +51,7 @@ LoginScene::LoginScene(QWidget *parent)
 
     //服务器连接
     tempSocket=new TempConnect(this);
+    webdistb=new WebDistb(tempSocket);
     connect(tempSocket, &TempConnect::connected, [this](){
         setStatus(online);
     });
@@ -61,6 +64,11 @@ LoginScene::LoginScene(QWidget *parent)
     connect(registWidget, &RegistWidget::submit, tempSocket, &TempConnect::register_email);//注册——邮箱提交
     connect(rgtCfmWidget, &RgtCfmWidget::again_code, tempSocket, &TempConnect::register_code);//请求重新发送验证码
     connect(rgtCfmWidget, &RgtCfmWidget::submit, tempSocket, &TempConnect::register_submit);//提交验证码
+
+    //处理函数
+    webdistb->addHandler("login", this);
+    webdistb->addHandler("regist_code", registWidget);
+    webdistb->addHandler("regist_confirm", rgtCfmWidget);
 }
 
 void LoginScene::setStatus(status s)
@@ -78,4 +86,12 @@ void LoginScene::setStatus(status s)
     statusLabel->setText(msg);
     QString style("color: %1;font-size:16px;font-weight:bold;");
     statusLabel->setStyleSheet(style.arg(color));
+}
+
+void LoginScene::handler(DataHead &head, DataResult &result)
+{
+    if(result.code==DataResult::code_success){
+        qDebug()<<"登入成功"<<result.jsdata.object().value("account").toString();
+    }else
+        QMessageBox::critical(nullptr, "错误", result.jsdata.object().value("msg").toString());
 }

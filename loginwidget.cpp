@@ -77,7 +77,7 @@ void LoginWidget::on_login_clicked()
         return;
     }
     //登入
-    emit login(account, password, 26);
+    emit login(account, password);
 }
 
 void LoginWidget::actErr(const QString& msg)

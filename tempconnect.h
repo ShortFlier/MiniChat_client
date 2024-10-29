@@ -12,11 +12,14 @@ public:
 public slots:
     //功能函数
     //登入请求
-    void login(QString account, QString password, unsigned int id);
+    void login(QString account, QString password);
     //注册请求
-    void register_email(QString email, unsigned int id);
-    void register_code(QString email, unsigned int id);   //重新获取验证码
-    void register_submit(QString email, QString code, unsigned int id);
+    //请求发送验证码
+    void register_email(QString email);
+    //重新获取验证码
+    void register_code(QString email);
+    //填写验证码，确认注册
+    void register_submit(QString email, QString code);
 };
 
 #endif // TEMPCONNECT_H

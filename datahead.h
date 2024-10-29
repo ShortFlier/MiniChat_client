@@ -4,6 +4,8 @@
 #include <QObject>
 #include <qjsondocument.h>
 
+#define ERROR QMessageBox::critical(nullptr, "错误", result.jsdata.object().value("msg").toString());
+
 class DataHead : public QObject
 {
     Q_OBJECT
@@ -49,6 +51,7 @@ public:
     //合并code和jsdata,转成格式可以发送的数据部分
     QString data() const;
     static DataResult error(const QString& msg);
+    static DataResult success(const QString& msg);
 
 public:
     enum code_result{code_success=200, code_error=400};
