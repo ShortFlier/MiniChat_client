@@ -2,6 +2,7 @@
 #include "./ui_loginwidget.h"
 
 #include <QPainter>
+#include <QFile>
 
 LoginWidget::LoginWidget(QWidget *parent)
     : QWidget(parent)
@@ -21,6 +22,8 @@ LoginWidget::LoginWidget(QWidget *parent)
 
     ui->err_act->close();
     ui->err_pwd->close();
+
+    actTip();
 }
 
 LoginWidget::~LoginWidget()
@@ -92,5 +95,24 @@ void LoginWidget::pwdErr(const QString& msg)
     ui->err_pwd->setText(msg);
     ui->err_pwd->show();
     qDebug()<<msg;
+}
+
+void LoginWidget::actTip()
+{
+    QFile ifile("./assets/account.txt");
+    ifile.open(QIODeviceBase::ReadOnly);
+    if(ifile.isOpen()){
+        QString acts=ifile.readAll();
+        qDebug()<<"acts: "<<acts;
+        QTextStream ts(&acts);
+        QStringList list;
+        while(!ts.atEnd()){
+            QString ac=ts.readLine();
+            list.append(ac);
+        }
+        qDebug()<<"list: "<<list;
+        ui->accout->addItems(list);
+    }else
+        qDebug()<<"./assets/account.txt 无法打开";
 }
 

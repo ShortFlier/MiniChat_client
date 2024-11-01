@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <qjsondocument.h>
+#include <QJsonObject>
 
 #define ERROR QMessageBox::critical(nullptr, "错误", result.jsdata.object().value("msg").toString());
 
@@ -50,6 +51,8 @@ public:
     DataResult(const QString& datastr);
     //合并code和jsdata,转成格式可以发送的数据部分
     QString data() const;
+    QString getstr(const QString& str)const { return jsdata.object().value(str).toString();}
+    void show()const{ qDebug()<<"code:"<<code<<jsdata.object();}
     static DataResult error(const QString& msg);
     static DataResult success(const QString& msg);
 

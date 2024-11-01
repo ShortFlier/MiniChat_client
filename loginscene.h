@@ -17,8 +17,17 @@ public:
     enum status{online, disonline};
     explicit LoginScene(QWidget *parent = nullptr);
     void setStatus(status s);
-    //登入成功
+    //开启服务器连接
+    void webstart();
+    void reshow();
+    //登入信息处理
     void handler(DataHead& head, DataResult& result) override;
+    //登入成功
+    void login(const QString& account);
+    void save(const QString& account);
+
+signals:
+    void logined(ValidConnect* vc);
 
 private:
     LoginWidget* loginWidget;
@@ -29,6 +38,7 @@ private:
 
     TempConnect* tempSocket;
     WebDistb* webdistb;
+
 
 signals:
 

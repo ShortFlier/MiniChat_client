@@ -32,5 +32,6 @@ private:
 
     void actErr(const QString&);
     void pwdErr(const QString&);
+    void actTip();
 };
 #endif // LOGINWIDGET_H

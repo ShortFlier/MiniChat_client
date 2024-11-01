@@ -2,6 +2,7 @@
 #define WAPPLICATION_H
 
 #include "loginscene.h"
+#include "mainscene.h"
 
 #include <QObject>
 
@@ -19,6 +20,7 @@ signals:
 
 private:
     LoginScene* loginScene=nullptr;
+    MainScene* mainScene=nullptr;
 };
 
 #endif // WAPPLICATION_H

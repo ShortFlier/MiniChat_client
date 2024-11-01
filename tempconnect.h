@@ -1,13 +1,18 @@
 #ifndef TEMPCONNECT_H
 #define TEMPCONNECT_H
 
+#include "validconnect.h"
 #include "websocketconnect.h"
 
 class TempConnect : public WebSocketConnect
 {
+    Q_OBJECT
 public:
     explicit TempConnect(QObject *parent = nullptr);
     ~TempConnect();
+
+    ValidConnect* upgrade(QString account);
+
 
 public slots:
     //功能函数

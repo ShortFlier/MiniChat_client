@@ -20,6 +20,7 @@ WebSocketConnect::WebSocketConnect(QObject *parent)
 
 WebSocketConnect::WebSocketConnect(WebSocketConnect &&wsc)
 {
+    wsc.socket->disconnect();
     socket=wsc.socket;
     wsc.socket=nullptr;
 }
@@ -31,7 +32,7 @@ void WebSocketConnect::sendText(DataHead &head, DataResult &result)
 
 QUrl WebSocketConnect::loadServerAddresss()
 {
-    QFile file(":/assets/server_address.txt");
+    QFile file("./assets/server_address.txt");
     file.open(QIODeviceBase::ReadOnly);
     if(file.isOpen()){
         QString ip, port;

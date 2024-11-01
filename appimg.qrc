@@ -3,5 +3,6 @@
         <file>img/app_icon.png</file>
         <file>img/background.jpg</file>
         <file>assets/server_address.txt</file>
+        <file>img/search.png</file>
     </qresource>
 </RCC>

@@ -13,6 +13,15 @@ TempConnect::~TempConnect()
 
 }
 
+ValidConnect* TempConnect::upgrade(QString account)
+{
+    ValidConnect* vc=new ValidConnect(*this, account);
+    if(socket==nullptr){
+        qDebug()<<"upgrade";
+    }
+    return vc;
+}
+
 void TempConnect::login(QString account, QString password)
 {
     if(socket->state()==QAbstractSocket::ConnectedState){

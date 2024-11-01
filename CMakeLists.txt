@@ -21,6 +21,10 @@ set(PROJECT_SOURCES
         loginwidget.ui
 )
 
+
+#将assets文件夹拷贝到exe同级目录下
+file(COPY "./assets" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(chat_client
         MANUAL_FINALIZATION
@@ -35,6 +39,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         webdistb.h webdistb.cpp
         wapplication.h wapplication.cpp
         validconnect.h validconnect.cpp
+        mainscene.h mainscene.cpp mainscene.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET chat_client APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

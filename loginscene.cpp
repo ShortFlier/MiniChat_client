@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QStatusBar>
 #include <QJsonObject>
+#include <QFile>
 
 LoginScene::LoginScene(QWidget *parent)
     : QMainWindow{parent}
@@ -49,6 +50,29 @@ LoginScene::LoginScene(QWidget *parent)
         rgtCfmWidget->show();
     });
 
+    webstart();
+
+}
+
+void LoginScene::setStatus(status s)
+{
+    QString msg;
+    QString color;
+    switch(s){
+    case online:
+        msg="已连接"; color="#005500"; break;
+    case disonline:
+        msg="未连接"; color="red"; break;
+    default:
+        msg="未连接"; color="red";
+    }
+    statusLabel->setText(msg);
+    QString style("color: %1;font-size:16px;font-weight:bold;");
+    statusLabel->setStyleSheet(style.arg(color));
+}
+
+void LoginScene::webstart()
+{
     //服务器连接
     tempSocket=new TempConnect(this);
     webdistb=new WebDistb(tempSocket);
@@ -71,27 +95,50 @@ LoginScene::LoginScene(QWidget *parent)
     webdistb->addHandler("regist_confirm", rgtCfmWidget);
 }
 
-void LoginScene::setStatus(status s)
+void LoginScene::reshow()
 {
-    QString msg;
-    QString color;
-    switch(s){
-    case online:
-        msg="已连接"; color="#005500"; break;
-    case disonline:
-        msg="未连接"; color="red"; break;
-    default:
-        msg="未连接"; color="red";
-    }
-    statusLabel->setText(msg);
-    QString style("color: %1;font-size:16px;font-weight:bold;");
-    statusLabel->setStyleSheet(style.arg(color));
+    show();
+    webstart();
 }
 
 void LoginScene::handler(DataHead &head, DataResult &result)
 {
     if(result.code==DataResult::code_success){
-        qDebug()<<"登入成功"<<result.jsdata.object().value("account").toString();
+        QString account=result.jsdata.object().value("account").toString();
+        qDebug()<<"登入成功"<<account;
+        login(account);
     }else
         QMessageBox::critical(nullptr, "错误", result.jsdata.object().value("msg").toString());
+}
+
+void LoginScene::login(const QString &account)
+{
+    ValidConnect* vc=tempSocket->upgrade(account);
+
+    tempSocket->disconnect();
+    delete tempSocket;
+    tempSocket=nullptr;
+    delete webdistb;
+    webdistb=nullptr;
+
+    hide();
+    emit logined(vc);
+
+    //保存账号
+    save(account);
+}
+
+void LoginScene::save(const QString &account)
+{
+    QFile file("./assets/account.txt");
+    file.open(QIODeviceBase::ReadWrite);
+    if(file.isOpen()){
+        QString accounts=file.readAll();
+        if(!accounts.contains(account)){
+            accounts.append("\n"+account);
+            file.write(accounts.toUtf8());
+        }
+    }else{
+        qDebug()<<"./assets/account.txt 打开出错";
+    }
 }
