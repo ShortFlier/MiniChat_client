@@ -4,5 +4,6 @@
         <file>img/background.jpg</file>
         <file>assets/server_address.txt</file>
         <file>img/search.png</file>
+        <file>img/backs.jpg</file>
     </qresource>
 </RCC>
