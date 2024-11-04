@@ -1,5 +1,6 @@
 #include "wapplication.h"
 
+WebSocketConnect* WApplication::sock=nullptr;
 
 WApplication::WApplication(QObject *parent)
     : QObject{parent}
@@ -11,6 +12,15 @@ WApplication::WApplication(QObject *parent)
     connect(loginScene, &LoginScene::logined, this, [=](ValidConnect* vc){
         mainScene=new MainScene(vc);
         mainScene->show();
+
+        sock=vc;
+
+        //退出登入
+        connect(mainScene, &MainScene::quit,[=](){
+            mainScene->hide();
+            loginScene->reshow();
+            delete mainScene;
+        });
     });
 }
 

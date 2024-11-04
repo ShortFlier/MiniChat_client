@@ -2,6 +2,8 @@
 #include <QJsonObject>
 #include <qdebug.h>
 
+const int DataHead::default_id=11;
+
 const QString DataHead::websocket="websocket";
 const QString DataHead::http="http";
 
@@ -97,6 +99,12 @@ QString DataHead::getUrl(const QString& _tp_type,const QString& _http_type,const
     }
     url+=sepe;
     return url;
+}
+
+void DataHead::setId(const QString &id)
+{
+    delete _tpid;
+    _tpid=new QString(id);
 }
 
 

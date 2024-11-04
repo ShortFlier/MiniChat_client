@@ -4,11 +4,14 @@
 #include <QObject>
 #include <qjsondocument.h>
 #include <QJsonObject>
+#include <QMessageBox>
 
 #define ERROR QMessageBox::critical(nullptr, "错误", result.jsdata.object().value("msg").toString());
+#define DEFAULT_ID QString::number(DataHead::default_id)
 
 class DataHead : public QObject
 {
+    static const int default_id;
     Q_OBJECT
 public:
     explicit DataHead(QString str, QObject *parent = nullptr);
@@ -19,7 +22,8 @@ public:
     DataHead(const QString& _tp_type,const QString& _http_type,const QString& _path,const QString& _tpid);
     QString getUrl() const;
     static QString getUrl(const QString& _tp_type,const QString& _http_type,const QString& _path,const QString& _tpid);
-
+    void setId(const QString& id);
+    static DataHead dataHead(const QString& path){return DataHead(DataHead::http, DataHead::request, path, QString::number(11));}
 
 public:
     enum tp_type{ws, htp};

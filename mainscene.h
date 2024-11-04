@@ -8,6 +8,8 @@
 #include <QMainWindow>
 #include <QPoint>
 
+#define W 900
+#define H 650
 #define X_Y 0,120
 #define DIS_XY 320,0
 
@@ -22,6 +24,8 @@ class MainScene : public QMainWindow,public Handler
 public:
     explicit MainScene(ValidConnect* vc, QWidget *parent = nullptr);
     ~MainScene();
+    //ui初始化
+    void uiInit();
     void paintEvent(QPaintEvent*) override;
     //接收userinfo
     void handler(DataHead& head, DataResult& result) override;
@@ -29,7 +33,21 @@ public:
     void sizeSet();
     void resizeEvent(QResizeEvent *event) override;
     void status(bool s);
+    //槽函数连接
     void connectss();
+    //display展示一个widget
+    void display_(QWidget* w);
+    //display移除widget
+    void disclear();
+
+private slots:
+    void on_img_clicked();
+
+    void on_pushButton_2_clicked();
+
+signals:
+    void quit();
+
 
 private:
     Ui::MainScene *ui;
@@ -37,6 +55,7 @@ private:
     WebDistb* wd;
     InformationWidget* ifwd;
     QWidget* display;
+    QWidget* tempWidget=nullptr;
 };
 
 #endif // MAINSCENE_H

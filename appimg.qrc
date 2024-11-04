@@ -3,7 +3,12 @@
         <file>img/app_icon.png</file>
         <file>img/background.jpg</file>
         <file>assets/server_address.txt</file>
-        <file>img/search.png</file>
         <file>img/backs.jpg</file>
+        <file>img/back2.jpg</file>
+        <file>img/back.png</file>
+        <file>img/searchi.png</file>
+        <file>img/camera.png</file>
+        <file>img/edit.png</file>
+        <file>img/check.png</file>
     </qresource>
 </RCC>

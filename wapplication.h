@@ -15,12 +15,15 @@ private:
     ~WApplication();
 public:
     static WApplication* getInstance();
+    static void setSocket(WebSocketConnect* socket){sock=socket;}
+    static WebSocketConnect* getSocket(){return sock;}
 
 signals:
 
 private:
     LoginScene* loginScene=nullptr;
     MainScene* mainScene=nullptr;
+    static WebSocketConnect* sock;
 };
 
 #endif // WAPPLICATION_H
