@@ -13,6 +13,7 @@ class Handler;
 class WebDistb : public QObject
 {
     typedef std::function<void(DataHead&,DataResult&)> FUN;
+    typedef std::function<void(int code, QByteArray& data)> BFUN;
     Q_OBJECT
 public:
     explicit WebDistb(WebSocketConnect* nt, QObject *parent = nullptr);
@@ -20,9 +21,13 @@ public:
     Handler* getHandler(const QString& path);
     //网络请求回调
     static void asyncWeb(WebSocketConnect* wc, DataHead& head, DataResult& result, FUN fun);
+    //网络请求回调 二进制
+    static void asyncBin(WebSocketConnect* wc, DataHead& head, QJsonDocument& json, QByteArray& data, BFUN fun);
+
 
 private slots:
     void textHandler(const QString& msg);
+    void binaryHandler(const QByteArray& data);
 
 private:
     WebSocketConnect* cnect=nullptr;
@@ -30,9 +35,16 @@ private:
     QMap<QString, Handler*> path_handler;
 
     static long id;
+
     //网络请求回调函数
     static QMap<long, FUN> id_fun;
     static FUN getFUN(const long& id);
+
+
+    //网络请求回调函数 二进制
+    static QMap<long, BFUN> id_bfun;
+    static BFUN getBFUN(const long& id);
+
 
     //消息转发
     void redirect(DataHead& head, DataResult& result);

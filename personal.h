@@ -28,8 +28,11 @@ public:
 private slots:
     void on_change_clicked();
 
+    void on_img_clicked();
+
 signals:
     void rename(QString name);
+    void reimg(QString name);
 
 private:
     Ui::Personal *ui;

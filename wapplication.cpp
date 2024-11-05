@@ -10,11 +10,10 @@ WApplication::WApplication(QObject *parent)
 
     //登入成功
     connect(loginScene, &LoginScene::logined, this, [=](ValidConnect* vc){
-        mainScene=new MainScene(vc);
-        mainScene->show();
-
         sock=vc;
 
+        mainScene=new MainScene(vc);
+        mainScene->show();
         //退出登入
         connect(mainScene, &MainScene::quit,[=](){
             mainScene->hide();

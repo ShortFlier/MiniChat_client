@@ -11,6 +11,8 @@ public:
     QString getAccount(){return account;}
     //获取用户信息
     void getUserInfo();
+    //用户头像上传
+    void uimgload(const QString& account, QByteArray& imgdata);
 
 private:
     QString account;

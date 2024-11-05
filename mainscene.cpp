@@ -2,6 +2,7 @@
 #include "mainscene.h"
 #include "personal.h"
 #include "ui_mainscene.h"
+#include "filemanager.h"
 
 #include <QMessageBox>
 #include <qboxlayout.h>
@@ -70,18 +71,14 @@ void MainScene::handler(DataHead &head, DataResult &result)
     ui->name->setText(result.getstr("name"));
     ui->act->setText(result.getstr("account"));
 
-    //头像
-    QString imgname=result.getstr("imgPath");
-    qDebug()<<"img: "<<imgname;
-    imgname=getImage(imgname);
-    QImage image(imgname);
-    // 计算缩放比例
-    qreal scale = qMin(ui->img->width() / static_cast<qreal>(image.width()), ui->img->height() / static_cast<qreal>(image.height()));
-    image = image.scaled(image.size() * scale, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    // 创建图标
-    QIcon icon(QPixmap::fromImage(image));
-    ui->img->setIcon(icon);
-    ui->img->setIconSize(QSize(ui->img->width(), ui->img->height()));
+    // //头像
+    // QString imgname=result.getstr("imgPath");
+    // img(imgname);
+
+    //下载自己头像
+    FileManager::uimgdown(vc->getAccount(),[this]()->void{
+        img(vc->getAccount()+USER_IMAGE_TAIL);
+    });
 }
 
 void MainScene::sizeSet()
@@ -109,6 +106,19 @@ void MainScene::status(bool s)
         ui->sts->setText("离线");
         ui->sts->setStyleSheet("#sts{color:red;}");
     }
+}
+
+void MainScene::img(const QString &name)
+{
+    QString _name=getImage(name);
+    qDebug()<<"img: "<<_name;
+    QImage image(_name);
+    // 计算缩放比例
+    image = image.scaled(QSize(ui->img->width(), ui->img->height()), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    // 创建图标
+    QIcon icon(QPixmap::fromImage(image));
+    ui->img->setIcon(icon);
+    ui->img->setIconSize(QSize(ui->img->width(), ui->img->height()));
 }
 
 void MainScene::connectss()
@@ -149,6 +159,10 @@ void MainScene::on_img_clicked()
         display_(pers);
         connect(pers, &Personal::rename, [this](QString name){
             ui->name->setText(name);
+        });
+        connect(pers, &Personal::reimg, [this](QString name){
+            qDebug()<<"reimg";
+            img(name);
         });
     });
 }

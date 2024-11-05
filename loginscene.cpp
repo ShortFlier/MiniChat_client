@@ -1,14 +1,13 @@
 #include "loginscene.h"
 
-
 #include <QMessageBox>
 #include <QStatusBar>
-#include <QJsonObject>
 #include <QFile>
 
 LoginScene::LoginScene(QWidget *parent)
     : QMainWindow{parent}
 {
+
     //图标
     setWindowIcon(QIcon(":/img/app_icon.png"));
     setWindowTitle("MiniChat");

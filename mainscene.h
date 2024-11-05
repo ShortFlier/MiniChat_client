@@ -33,6 +33,8 @@ public:
     void sizeSet();
     void resizeEvent(QResizeEvent *event) override;
     void status(bool s);
+    //头像设置
+    void img(const QString& name);
     //槽函数连接
     void connectss();
     //display展示一个widget

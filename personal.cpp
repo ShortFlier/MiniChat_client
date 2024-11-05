@@ -1,8 +1,10 @@
 #include "personal.h"
+#include "filemanager.h"
 #include "ui_personal.h"
 #include "wapplication.h"
 #include "webdistb.h"
 
+#include <QFileDialog>
 
 Personal::Personal(User user, int self, QWidget *parent)
     : QWidget(parent)
@@ -37,6 +39,7 @@ Personal::Personal(User user, int self, QWidget *parent)
 
 Personal::~Personal()
 {
+    disconnect();
     delete ui;
 }
 
@@ -57,8 +60,7 @@ void Personal::img(const QString &name)
     QString imgname=getImage(name);
     QImage image(imgname);
     // 计算缩放比例
-    qreal scale = qMin(ui->img->width() / static_cast<qreal>(image.width()), ui->img->height() / static_cast<qreal>(image.height()));
-    image = image.scaled(image.size() * scale, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    image = image.scaled(QSize(ui->img->width(), ui->img->height()), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     // 创建图标
     QIcon icon(QPixmap::fromImage(image));
     ui->img->setIcon(icon);
@@ -93,5 +95,37 @@ void Personal::on_change_clicked()
             });
         }
     }
+}
+
+//上传头像
+void Personal::on_img_clicked()
+{
+    //打开文件
+    QString path = QFileDialog::getOpenFileName(nullptr, "Open Image File", QString(), QString("*.jpg"));
+    //文件数据
+    QByteArray* data;
+    data=FileManager::uimgload(path);
+    if(data==nullptr){
+        QMessageBox::critical(nullptr, "error", "选择文件不能大于1MB");
+        return;
+    }
+    //head
+    DataHead head=DataHead::dataHead("uimgload");
+    QJsonObject jo;
+    jo.insert("account", ui->account_2->text());
+    QJsonDocument json(jo);
+    //上传头像
+    WebDistb::asyncBin(WApplication::getSocket(), head, json, *data, [=](int code, QByteArray& d) mutable->void{
+        qDebug()<<code;
+        if(code==DataResult::code_success){
+            //保存头像
+            FileManager::uimgsave(ui->account_2->text(), *data);
+            QString name=ui->account_2->text()+USER_IMAGE_TAIL;
+            img(name);
+            emit reimg(name);
+        }else
+            QMessageBox::critical(nullptr,"error", "上传出错");
+        delete data;
+    });
 }
 

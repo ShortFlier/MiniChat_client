@@ -5,6 +5,8 @@
 #include <QWebSocket>
 #include "datahead.h"
 
+#define HLENGTH 100
+
 class WebSocketConnect : public QObject
 {
     Q_OBJECT
@@ -15,7 +17,10 @@ public:
     virtual ~WebSocketConnect()=0;
     static QUrl loadServerAddresss();
     QWebSocket* getSocket(){ return socket; }
+    //文本数据发送
     void sendText(DataHead& head, DataResult& result);
+    //二进制数据发送
+    void sendBinary(DataHead& head, QJsonDocument& jd, QByteArray& data);
 
 signals:
     void connected();

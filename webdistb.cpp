@@ -3,11 +3,13 @@
 long WebDistb::id=20;
 
 QMap<long, WebDistb::FUN> WebDistb::id_fun=QMap<long, WebDistb::FUN>();
+QMap<long, WebDistb::BFUN> WebDistb::id_bfun=QMap<long, WebDistb::BFUN>();
 
 WebDistb::WebDistb(WebSocketConnect *nt, QObject *parent)
 {
     cnect=nt;
     connect(cnect->getSocket(), &QWebSocket::textMessageReceived, this, &WebDistb::textHandler);
+    connect(cnect->getSocket(),&QWebSocket::binaryMessageReceived, this, &WebDistb::binaryHandler);
 }
 
 void WebDistb::addHandler(const QString &path, Handler *handler)
@@ -35,6 +37,16 @@ void WebDistb::asyncWeb(WebSocketConnect *wc, DataHead &head, DataResult &result
     ++id;
 }
 
+void WebDistb::asyncBin(WebSocketConnect *wc, DataHead &head, QJsonDocument &json, QByteArray &data, BFUN fun)
+{
+    QString tid=QString::number(id);
+    head.setId(tid);
+    id_bfun.insert(id,fun);
+    qDebug()<<"error";
+    wc->sendBinary(head, json, data);
+    ++id;
+}
+
 void WebDistb::textHandler(const QString &msg)
 {
     QString data=msg;
@@ -46,10 +58,40 @@ void WebDistb::textHandler(const QString &msg)
     redirect(head, result);
 }
 
+void WebDistb::binaryHandler(const QByteArray &data)
+{
+    //头部
+    QByteArray h=data.mid(0,HLENGTH);
+    int i=h.indexOf(DataHead::sepe.toUtf8());
+    //请求路径
+    QString path=h.left(i);
+    qDebug()<<"path: "<<path;
+    DataHead head(path);
+    //状态码
+    QByteArray c=h.mid(i+2);
+    i=c.indexOf(DataHead::sepe.toUtf8());
+    int code = (c.mid(0,i)).toInt();
+    //数据部分
+    QByteArray d=data.mid(HLENGTH);
+
+    long id=(head._tpid)->toLong();
+    if(id_bfun.contains(id)){
+        BFUN fun=getBFUN(id);
+        fun(code, d);
+    }
+}
+
 WebDistb::FUN WebDistb::getFUN(const long &id)
 {
     FUN fun=id_fun.value(id);
     id_fun.remove(id);
+    return fun;
+}
+
+WebDistb::BFUN WebDistb::getBFUN(const long &id)
+{
+    BFUN fun=id_bfun.value(id);
+    id_bfun.remove(id);
     return fun;
 }
 

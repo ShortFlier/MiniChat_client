@@ -30,6 +30,18 @@ void WebSocketConnect::sendText(DataHead &head, DataResult &result)
     socket->sendTextMessage(head.getUrl()+result.data());
 }
 
+void WebSocketConnect::sendBinary(DataHead &head, QJsonDocument& jd, QByteArray& data)
+{
+    QString path=head.getUrl()+jd.toJson();
+    QByteArray h=path.toUtf8();
+    if(h.length()>HLENGTH){
+        QMessageBox::critical(nullptr, "error", "数据同步大于"+QString::number(HLENGTH)+"字节");
+        return;
+    }
+    h.resize(HLENGTH);
+    socket->sendBinaryMessage(h+data);
+}
+
 QUrl WebSocketConnect::loadServerAddresss()
 {
     QFile file("./assets/server_address.txt");

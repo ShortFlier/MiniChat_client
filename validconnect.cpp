@@ -16,3 +16,13 @@ void ValidConnect::getUserInfo()
         sendText(head, result);
     }
 }
+
+void ValidConnect::uimgload(const QString &account, QByteArray &imgdata)
+{
+    DataHead head = DataHead::dataHead("uimgload");
+    QJsonObject jo;
+    jo.insert("account", account);
+    QJsonDocument jd(jo);
+    sendBinary(head, jd, imgdata);
+}
+

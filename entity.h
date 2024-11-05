@@ -5,9 +5,6 @@
 #include <QJsonObject>
 #include <QString>
 
-#define DEFAULT_IMAGE ":/img/camera.png"
-#define HEADSHOT_PATH "./assets/headshot/"
-
 
 struct User
 {
@@ -31,8 +28,5 @@ struct User
 
     QJsonObject json();
 };
-
-//参数为图片名，返回图像的路径，如果没有，返回默认图像
-QString getImage(const QString& path);
 
 #endif // ENTITY_H

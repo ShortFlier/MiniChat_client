@@ -26,10 +26,4 @@ QJsonObject User::json()
     return jo;
 }
 
-QString getImage(const QString &path)
-{
-    QString p=HEADSHOT_PATH+path;
-    if(!path.isEmpty()&&QFile::exists(p))
-        return p;
-    return QString(DEFAULT_IMAGE);
-}
+
