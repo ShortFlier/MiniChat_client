@@ -42,7 +42,6 @@ void WebDistb::asyncBin(WebSocketConnect *wc, DataHead &head, QJsonDocument &jso
     QString tid=QString::number(id);
     head.setId(tid);
     id_bfun.insert(id,fun);
-    qDebug()<<"error";
     wc->sendBinary(head, json, data);
     ++id;
 }
@@ -65,7 +64,6 @@ void WebDistb::binaryHandler(const QByteArray &data)
     int i=h.indexOf(DataHead::sepe.toUtf8());
     //请求路径
     QString path=h.left(i);
-    qDebug()<<"path: "<<path;
     DataHead head(path);
     //状态码
     QByteArray c=h.mid(i+2);

@@ -25,6 +25,7 @@ public:
     static QByteArray* uimgload(const QString& path);
     //保存用户头像
     static void uimgsave(const QString& account, QByteArray& data);
+
     //下载一个用户头像，fun为头像下载成功后执行的回调函数类型为void()
     template <typename Fun>
     static void uimgdown(const QString& account, Fun fun)

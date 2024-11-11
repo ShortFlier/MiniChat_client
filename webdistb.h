@@ -19,7 +19,7 @@ public:
     explicit WebDistb(WebSocketConnect* nt, QObject *parent = nullptr);
     void addHandler(const QString& path, Handler* handler);
     Handler* getHandler(const QString& path);
-    //网络请求回调
+    //网络请求回调 在状态码为200时触发fun函数
     static void asyncWeb(WebSocketConnect* wc, DataHead& head, DataResult& result, FUN fun);
     //网络请求回调 二进制
     static void asyncBin(WebSocketConnect* wc, DataHead& head, QJsonDocument& json, QByteArray& data, BFUN fun);

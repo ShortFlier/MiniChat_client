@@ -79,48 +79,6 @@ color:rgb(0, 170, 255);</string>
     </property>
    </widget>
   </widget>
-  <widget class="QPushButton" name="chat">
-   <property name="geometry">
-    <rect>
-     <x>320</x>
-     <y>30</y>
-     <width>56</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>发消息</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="friendb">
-   <property name="geometry">
-    <rect>
-     <x>320</x>
-     <y>60</y>
-     <width>56</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>加为好友</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="dlt">
-   <property name="geometry">
-    <rect>
-     <x>320</x>
-     <y>90</y>
-     <width>56</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color:red;</string>
-   </property>
-   <property name="text">
-    <string>删除好友</string>
-   </property>
-  </widget>
   <widget class="QWidget" name="self" native="true">
    <property name="geometry">
     <rect>

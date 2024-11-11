@@ -47,6 +47,10 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_search_clicked();
+
+    void on_notify_clicked();
+
 signals:
     void quit();
 

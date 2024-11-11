@@ -120,7 +120,7 @@ font-weight:bold;</string>
     <widget class="QWidget" name="widget_3" native="true">
      <property name="geometry">
       <rect>
-       <x>260</x>
+       <x>280</x>
        <y>10</y>
        <width>41</width>
        <height>61</height>
@@ -145,6 +145,25 @@ font-weight:bold;</string>
        <string>退出</string>
       </property>
      </widget>
+    </widget>
+    <widget class="QPushButton" name="notify">
+     <property name="geometry">
+      <rect>
+       <x>232</x>
+       <y>15</y>
+       <width>45</width>
+       <height>45</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border:none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="widget_4" native="true">

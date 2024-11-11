@@ -16,3 +16,12 @@ InformationWidget::~InformationWidget()
 {
     delete ui;
 }
+
+void InformationWidget::sizeSet()
+{
+    int w=ui->infosr->width();
+    int h=ui->tabWidget->height()-30;
+    ui->infosr->resize(w,h);
+    ui->friendssr->resize(w,h);
+    ui->groupsr->resize(w,h);
+}

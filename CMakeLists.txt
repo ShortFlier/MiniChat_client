@@ -45,6 +45,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         mainscene.ui
         personal.h personal.cpp personal.ui
         filemanager.h filemanager.cpp
+        chatwidget.h chatwidget.cpp chatwidget.ui
+        notifywidget.h notifywidget.cpp notifywidget.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET chat_client APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

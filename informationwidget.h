@@ -14,6 +14,7 @@ class InformationWidget : public QWidget
 public:
     explicit InformationWidget(QWidget *parent = nullptr);
     ~InformationWidget();
+    void sizeSet();
 
 private:
     Ui::InformationWidget *ui;

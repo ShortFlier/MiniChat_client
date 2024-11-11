@@ -19,21 +19,7 @@ Personal::Personal(User user, int self, QWidget *parent)
 
     img(user.imgPath);
 
-    if(self==FRIEND){ //好友
-        ui->friendb->hide();
-    }else if(self==STRANGER){   //陌生人
-        ui->chat->hide();
-        ui->dlt->hide();
-    }else if(self==SELF){ //本人
-        ui->friendb->hide();
-        ui->chat->hide();
-        ui->dlt->hide();
-        disSelf(user);
-    }else{  //其他情况
-        ui->friendb->hide();
-        ui->chat->hide();
-        ui->dlt->hide();
-    }
+    disSelf(user);
 
 }
 

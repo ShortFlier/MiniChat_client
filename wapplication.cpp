@@ -1,6 +1,7 @@
 #include "wapplication.h"
 
 WebSocketConnect* WApplication::sock=nullptr;
+QString WApplication::account=QString();
 
 WApplication::WApplication(QObject *parent)
     : QObject{parent}
@@ -11,6 +12,7 @@ WApplication::WApplication(QObject *parent)
     //登入成功
     connect(loginScene, &LoginScene::logined, this, [=](ValidConnect* vc){
         sock=vc;
+        account=vc->getAccount();
 
         mainScene=new MainScene(vc);
         mainScene->show();
@@ -19,6 +21,9 @@ WApplication::WApplication(QObject *parent)
             mainScene->hide();
             loginScene->reshow();
             delete mainScene;
+
+            sock=nullptr;
+            account=QString();
         });
     });
 }

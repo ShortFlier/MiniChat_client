@@ -50,22 +50,91 @@ QTabBar::tab:selected {
 </string>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="info">
       <attribute name="title">
        <string>消息</string>
       </attribute>
+      <widget class="QScrollArea" name="infosr">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>301</width>
+         <height>351</height>
+        </rect>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>299</width>
+          <height>349</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
      </widget>
      <widget class="QWidget" name="friends">
       <attribute name="title">
        <string>联系人</string>
       </attribute>
+      <widget class="QScrollArea" name="friendssr">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>301</width>
+         <height>351</height>
+        </rect>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>299</width>
+          <height>349</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
      </widget>
      <widget class="QWidget" name="group">
       <attribute name="title">
        <string>群聊</string>
       </attribute>
+      <widget class="QScrollArea" name="groupsr">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>301</width>
+         <height>351</height>
+        </rect>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>299</width>
+          <height>349</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
      </widget>
     </widget>
    </item>
