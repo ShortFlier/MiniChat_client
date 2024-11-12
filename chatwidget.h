@@ -14,7 +14,7 @@ class ChatWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit ChatWidget(User& user,const bool& isfriend, const bool& online=false, QWidget *parent = nullptr);
+    explicit ChatWidget(User& user,const bool& isfriend,const QString& rname=QString(), const bool& online=false, QWidget *parent = nullptr);
     ~ChatWidget();
 
 private slots:

@@ -4,7 +4,7 @@
 
 #include <QInputDialog>
 
-ChatWidget::ChatWidget(User& user, const bool& isfriend, const bool& online, QWidget *parent)
+ChatWidget::ChatWidget(User& user, const bool& isfriend,const QString& rname, const bool& online, QWidget *parent)
     : QWidget(parent),user(user),isfriend(isfriend),online(online)
     , ui(new Ui::ChatWidget)
 {
@@ -12,6 +12,8 @@ ChatWidget::ChatWidget(User& user, const bool& isfriend, const bool& online, QWi
 
     img(user.imgPath);
     info();
+    if(!rname.isEmpty())
+        ui->friendname->setText(rname);
 }
 
 
@@ -47,7 +49,6 @@ void ChatWidget::info()
     }else{
         ui->status->setText("离线");
     }
-    qDebug()<<isfriend;
     if(isfriend){
         ui->pushButton->setText("删除好友");
         ui->pushButton->setStyleSheet("#pushButton{color:red;}");
@@ -60,7 +61,14 @@ void ChatWidget::info()
 void ChatWidget::on_pushButton_clicked()
 {
     if(isfriend){//删除好友
-
+        DataHead head=DataHead::dataHead("dlefriend");
+        QJsonObject jo;
+        jo.insert("account", WApplication::getAccount());
+        jo.insert("friend", user.account);
+        DataResult result(0,QJsonDocument(jo));
+        WApplication::getSocket()->sendText(head,result);
+        isfriend=false;
+        info();
     }else{//加为好友
         bool ok=false;
         QString note=QInputDialog::getText(nullptr, "加为好友", "备注", QLineEdit::Normal, QString(), &ok);

@@ -28,7 +28,12 @@ class Friend:public QWidget{
     Q_OBJECT
 public:
     explicit Friend(QJsonObject& jo);
-
+signals:
+    void del(Friend*, int s);
+private:
+    unsigned int id;
+    void img(QPushButton* img,const QString& iname);
+    void access(QJsonObject& jo, bool status);
 };
 
 #endif // NOTIFYWIDGET_H

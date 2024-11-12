@@ -1,6 +1,8 @@
 #ifndef INFORMATIONWIDGET_H
 #define INFORMATIONWIDGET_H
 
+#include <QPushButton>
+#include <QVBoxLayout>
 #include <QWidget>
 
 namespace Ui {
@@ -15,9 +17,32 @@ public:
     explicit InformationWidget(QWidget *parent = nullptr);
     ~InformationWidget();
     void sizeSet();
+signals:
+    void userchat(const QString& act, bool online, const QString& name);
 
 private:
     Ui::InformationWidget *ui;
+    QVBoxLayout* frd;
+    QVBoxLayout* grp;
+    QVBoxLayout* info;
+    //获取好友列表
+    void frdinit();
+    //获取群列表
+    void grpinit();
+    //获取消息
+    void infoinit();
 };
-
+class IFriend:public QWidget{
+    Q_OBJECT
+public:
+    IFriend(const QJsonObject& jo, QWidget *parent = nullptr);
+    void mousePressEvent(QMouseEvent *event) override;
+signals:
+    void chat(const QString& act, bool online, const QString& name);
+private:
+    QString act;
+    QString name;
+    bool online;
+};
+void img(QPushButton* img, const QString& act);
 #endif // INFORMATIONWIDGET_H

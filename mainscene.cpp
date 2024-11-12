@@ -48,6 +48,7 @@ void MainScene::uiInit()
     vc->getUserInfo();
 
     ifwd=new InformationWidget(this);
+    connect(ifwd, &InformationWidget::userchat, this, &MainScene::userchat);
     ifwd->move(X_Y);
 
     display=new QWidget(this);
@@ -71,6 +72,7 @@ void MainScene::handler(DataHead &head, DataResult &result)
 {
     result.show();
     ui->name->setText(result.getstr("name"));
+    WApplication::name=result.getstr("name");
     ui->act->setText(result.getstr("account"));
 
     // //头像
@@ -211,5 +213,21 @@ void MainScene::on_notify_clicked()
     NotifyWidget* ntf=new NotifyWidget(vc->getAccount(), vc);
     wd->addHandler("myinvite", ntf);
     display_(ntf);
+}
+
+void MainScene::userchat(const QString& act, bool online, const QString& name)
+{
+    DataHead head=DataHead::dataHead("search");
+    QJsonObject jo;
+    jo.insert("friend", act);
+    jo.insert("account",WApplication::getAccount());
+    DataResult result=DataResult(0, QJsonDocument(jo));
+    WebDistb::asyncWeb(WApplication::getSocket(), head, result, [=](DataHead& head, DataResult& result)->void{
+        User user;
+        user.enjson(result.jsdata.object());
+        bool isfriend=result.jsdata.object().value("isfriend").toBool();
+        ChatWidget* cw=new ChatWidget(user,isfriend, name, online);
+        display_(cw);
+    });
 }
 

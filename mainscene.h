@@ -51,6 +51,8 @@ private slots:
 
     void on_notify_clicked();
 
+    void userchat(const QString& act, bool online, const QString& name);
+
 signals:
     void quit();
 

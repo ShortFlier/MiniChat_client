@@ -2,6 +2,7 @@
 
 WebSocketConnect* WApplication::sock=nullptr;
 QString WApplication::account=QString();
+QString WApplication::name=QString();
 
 WApplication::WApplication(QObject *parent)
     : QObject{parent}

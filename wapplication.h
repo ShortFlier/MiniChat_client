@@ -18,6 +18,7 @@ public:
     static void setSocket(WebSocketConnect* socket){sock=socket;}
     static WebSocketConnect* getSocket(){return sock;}
     static QString getAccount(){return account;}
+    static QString name;
 
 signals:
 
@@ -26,6 +27,7 @@ private:
     MainScene* mainScene=nullptr;
     static WebSocketConnect* sock;
     static QString account;
+
 };
 
 #endif // WAPPLICATION_H
