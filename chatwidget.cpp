@@ -1,5 +1,6 @@
 #include "chatwidget.h"
 #include "filemanager.h"
+#include "mapper.h"
 #include "ui_chatwidget.h"
 
 #include <QInputDialog>
@@ -25,7 +26,6 @@ ChatWidget::~ChatWidget()
 
 void ChatWidget::img(const QString &name)
 {
-
     //头像
     QString imgname=getImage(name);
     QImage image(imgname);
@@ -35,6 +35,8 @@ void ChatWidget::img(const QString &name)
     QIcon icon(QPixmap::fromImage(image));
     ui->img->setIcon(icon);
     ui->img->setIconSize(QSize(ui->img->width(), ui->img->height()));
+
+    ui->send->setIcon(QIcon(":/img/send.png"));
 }
 
 void ChatWidget::info()
@@ -55,6 +57,13 @@ void ChatWidget::info()
     }else{
         ui->pushButton->setText("加为好友");
         ui->pushButton->setStyleSheet("#pushButton{color:green;}");
+    }
+    if(isfriend){
+        ui->chatdisplay->show();
+        ui->input->show();
+    }else{
+        ui->chatdisplay->hide();
+        ui->input->hide();
     }
 }
 
@@ -82,6 +91,34 @@ void ChatWidget::on_pushButton_clicked()
             WApplication::getSocket()->sendText(head, result);
             ui->pushButton->setDisabled(true);
         }
+    }
+}
+
+
+void ChatWidget::on_textEdit_textChanged()
+{
+    // 根据内容计算高度
+    int maxh=100;
+    QSize size = ui->textEdit->document()->size().toSize();
+    int newHeight = size.height() + 10; // 额外加一些边距
+    ui->textEdit->setFixedHeight(newHeight>maxh?maxh:newHeight);
+}
+
+//发送消息
+void ChatWidget::on_send_clicked()
+{
+    QString msg=ui->textEdit->toPlainText();
+    if(!msg.isEmpty()){
+        DataHead head=DataHead::wsHead("send");
+        Information info;
+        info.sender=WApplication::getAccount();
+        info.reciver=user.account;
+        info.type=INFO_TEXT;
+        info.msg=msg;
+        DataResult result(0, QJsonDocument(info.json()));
+        WApplication::getSocket()->sendText(head, result);
+        Mapper::instance()->newmsg(info);
+        ui->textEdit->setText(QString());
     }
 }
 

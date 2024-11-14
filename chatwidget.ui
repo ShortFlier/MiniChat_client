@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>580</width>
-    <height>530</height>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -128,12 +128,61 @@ font-weight:bold;</string>
   <widget class="QWidget" name="chatdisplay" native="true">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>60</y>
-     <width>580</width>
-     <height>470</height>
+     <width>551</width>
+     <height>471</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-top:1px solid #aaaaaa;
+border-bottom:1px solid #aaaaaa;</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="input" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>530</y>
+     <width>551</width>
+     <height>150</height>
+    </rect>
+   </property>
+   <widget class="QTextEdit" name="textEdit">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>460</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>100</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="send">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>10</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-radius:15px;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

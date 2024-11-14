@@ -1,5 +1,7 @@
 #include "wapplication.h"
 
+#include "mapper.h"
+
 WebSocketConnect* WApplication::sock=nullptr;
 QString WApplication::account=QString();
 QString WApplication::name=QString();
@@ -14,6 +16,7 @@ WApplication::WApplication(QObject *parent)
     connect(loginScene, &LoginScene::logined, this, [=](ValidConnect* vc){
         sock=vc;
         account=vc->getAccount();
+        Mapper::getInstance(account);
 
         mainScene=new MainScene(vc);
         mainScene->show();
@@ -39,4 +42,9 @@ WApplication *WApplication::getInstance()
 {
     static WApplication* app=new WApplication();
     return app;
+}
+
+bool WApplication::online()
+{
+    return sock->getSocket()->state() == QAbstractSocket::ConnectedState;
 }

@@ -20,6 +20,10 @@ public:
 private slots:
     void on_pushButton_clicked();
 
+    void on_textEdit_textChanged();
+
+    void on_send_clicked();
+
 private:
     Ui::ChatWidget *ui;
     User user;

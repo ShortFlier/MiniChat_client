@@ -29,4 +29,24 @@ struct User
     QJsonObject json();
 };
 
+
+#define INFO_TEXT 'a'
+#define INFO_IMGE 'b'
+struct Information{
+    long id=0;
+    QString sender;
+    QString reciver;
+    QDateTime time;
+    char type;
+    QString msg;
+
+    Information(){}
+    Information(const QString& sender, const QString& reciver, char type, const QString& msg=QString())
+        :sender(sender), reciver(reciver), type(type), msg(msg){}
+    static Information enjson(const QJsonObject& jo);
+    QJsonObject json();
+    //比较时间
+    bool operator>(Information& info);
+};
+
 #endif // ENTITY_H

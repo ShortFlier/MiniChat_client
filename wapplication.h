@@ -19,6 +19,7 @@ public:
     static WebSocketConnect* getSocket(){return sock;}
     static QString getAccount(){return account;}
     static QString name;
+    static bool online();
 
 signals:
 

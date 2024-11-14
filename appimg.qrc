@@ -11,5 +11,6 @@
         <file>img/edit.png</file>
         <file>img/check.png</file>
         <file>img/ring.png</file>
+        <file>img/send.png</file>
     </qresource>
 </RCC>

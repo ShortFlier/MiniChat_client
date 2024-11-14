@@ -24,6 +24,7 @@ public:
     static QString getUrl(const QString& _tp_type,const QString& _http_type,const QString& _path,const QString& _tpid);
     void setId(const QString& id);
     static DataHead dataHead(const QString& path){return DataHead(DataHead::http, DataHead::request, path, QString::number(11));}
+    static DataHead wsHead(const QString& path){return DataHead(DataHead::websocket, "none", path, "11");}
 
 public:
     enum tp_type{ws, htp};
