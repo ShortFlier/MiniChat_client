@@ -1,3 +1,5 @@
+
+#include "chatdisplayer.h"
 #include "chatwidget.h"
 #include "filemanager.h"
 #include "mapper.h"
@@ -15,6 +17,10 @@ ChatWidget::ChatWidget(User& user, const bool& isfriend,const QString& rname, co
     info();
     if(!rname.isEmpty())
         ui->friendname->setText(rname);
+
+    layout=new QVBoxLayout();
+    ui->contents->setLayout(layout);
+    ui->scrollArea->setWidgetResizable(false);
 }
 
 
@@ -22,6 +28,18 @@ ChatWidget::ChatWidget(User& user, const bool& isfriend,const QString& rname, co
 ChatWidget::~ChatWidget()
 {
     delete ui;
+    delete layout;
+}
+
+void ChatWidget::reciver(const QString &act, QJsonArray &data)
+{
+    if(act==user.account){
+        qDebug()<<"msg count: "<<data.size();
+        for(int i=0; i<data.size(); ++i){
+            Information info=Information::enjson(data.at(i).toObject());
+            dismsg(info);
+        }
+    }
 }
 
 void ChatWidget::img(const QString &name)
@@ -65,6 +83,14 @@ void ChatWidget::info()
         ui->chatdisplay->hide();
         ui->input->hide();
     }
+}
+
+void ChatWidget::dismsg(Information &info)
+{
+    ChatDisplayer* chat=new ChatDisplayer(info,ui->contents);
+    layout->addWidget(chat);
+    h+=chat->height();
+    ui->contents->resize(ui->contents->width(), h);
 }
 
 void ChatWidget::on_pushButton_clicked()
@@ -116,8 +142,12 @@ void ChatWidget::on_send_clicked()
         info.type=INFO_TEXT;
         info.msg=msg;
         DataResult result(0, QJsonDocument(info.json()));
+        //发送服务器
         WApplication::getSocket()->sendText(head, result);
+        //保存本地数据库
         Mapper::instance()->newmsg(info);
+        //显示
+        dismsg(info);
         ui->textEdit->setText(QString());
     }
 }

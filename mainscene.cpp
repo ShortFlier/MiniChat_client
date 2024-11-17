@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <qboxlayout.h>
 #include <qpainter.h>
+#include <functional>
 
 MainScene::MainScene(ValidConnect* vc, QWidget *parent)
     : QMainWindow(parent)
@@ -23,6 +24,7 @@ MainScene::MainScene(ValidConnect* vc, QWidget *parent)
     //处理函数
     wd=new WebDistb(vc);
     wd->addHandler("userinfo",this);
+    wd->addwsHandler("send", std::bind(&MainScene::sendHandler,this, std::placeholders::_1, std::placeholders::_2));
 
     connectss();
 }
@@ -147,6 +149,21 @@ void MainScene::disclear()
         tempWidget->deleteLater();
         tempWidget=nullptr;
     }
+}
+
+void MainScene::sendHandler(DataHead &head, DataResult &result)
+{
+    QJsonArray data=result.jsdata.array();
+    QString act=data.at(0).toObject().value("sender").toString();
+    //如果当前展示页面为聊天界面，推送至聊天界面
+    qDebug()<<"sender: "<<act;
+    if(tempWidget)
+        qDebug()<<"tw: "<<typeid(*tempWidget).name();
+    ChatWidget* cw=dynamic_cast<ChatWidget*>(tempWidget);
+    if(cw){
+        cw->reciver(act, data);
+    }
+    //更新消息列表
 }
 
 //点击头像展示个人资料

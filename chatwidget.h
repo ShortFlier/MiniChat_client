@@ -3,6 +3,8 @@
 
 #include "entity.h"
 
+#include <QJsonArray>
+#include <QVBoxLayout>
 #include <QWidget>
 
 namespace Ui {
@@ -17,6 +19,10 @@ public:
     explicit ChatWidget(User& user,const bool& isfriend,const QString& rname=QString(), const bool& online=false, QWidget *parent = nullptr);
     ~ChatWidget();
 
+    void reciver(const QString& act, QJsonArray& data);
+
+    int h=0;
+
 private slots:
     void on_pushButton_clicked();
 
@@ -30,8 +36,11 @@ private:
     bool isfriend;
     bool online;
 
+    QLayout * layout;
+
     void img(const QString& name);
     void info();
+    void dismsg(Information& info);
 };
 
 #endif // CHATWIDGET_H

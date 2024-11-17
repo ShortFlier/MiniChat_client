@@ -41,6 +41,8 @@ public:
     void display_(QWidget* w);
     //display移除widget
     void disclear();
+    //消息接收处理
+    void sendHandler(DataHead&,DataResult&);
 
 private slots:
     void on_img_clicked();

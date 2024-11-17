@@ -95,6 +95,10 @@ WebDistb::BFUN WebDistb::getBFUN(const long &id)
 
 void WebDistb::redirect(DataHead &head, DataResult &result)
 {
+    if(*head._tp_type==DataHead::websocket){
+        (wshandler.value(*head._path))(head, result);
+        return;
+    }
     if(result.code!=DataResult::code_success){
         ERROR
         return;

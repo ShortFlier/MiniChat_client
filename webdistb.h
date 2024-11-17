@@ -24,6 +24,8 @@ public:
     //网络请求回调 二进制
     static void asyncBin(WebSocketConnect* wc, DataHead& head, QJsonDocument& json, QByteArray& data, BFUN fun);
 
+    void addwsHandler(const QString& path, FUN fun){wshandler.insert(path, fun);}
+
 
 private slots:
     void textHandler(const QString& msg);
@@ -33,6 +35,8 @@ private:
     WebSocketConnect* cnect=nullptr;
     //消息处理对象
     QMap<QString, Handler*> path_handler;
+    //消息推送处理
+    QMap<QString, FUN> wshandler;
 
     static long id;
 
