@@ -25,6 +25,8 @@ WApplication::WApplication(QObject *parent)
             mainScene->hide();
             loginScene->reshow();
             delete mainScene;
+            //清除数据库连接
+            Mapper::instance()->close();
 
             sock=nullptr;
             account=QString();

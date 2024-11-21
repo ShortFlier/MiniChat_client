@@ -43,6 +43,8 @@ public:
     void disclear();
     //消息接收处理
     void sendHandler(DataHead&,DataResult&);
+    //登入后接收消息
+    void loginedmsg(DataHead&,DataResult&);
 
 private slots:
     void on_img_clicked();

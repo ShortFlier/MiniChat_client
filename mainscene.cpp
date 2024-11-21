@@ -1,5 +1,6 @@
 #include "entity.h"
 #include "mainscene.h"
+#include "mapper.h"
 #include "personal.h"
 #include "ui_mainscene.h"
 #include "filemanager.h"
@@ -25,6 +26,7 @@ MainScene::MainScene(ValidConnect* vc, QWidget *parent)
     wd=new WebDistb(vc);
     wd->addHandler("userinfo",this);
     wd->addwsHandler("send", std::bind(&MainScene::sendHandler,this, std::placeholders::_1, std::placeholders::_2));
+    wd->addwsHandler("loginedmsg", std::bind(&MainScene::loginedmsg, this, std::placeholders::_1, std::placeholders::_2));
 
     connectss();
 }
@@ -156,7 +158,6 @@ void MainScene::sendHandler(DataHead &head, DataResult &result)
     QJsonArray data=result.jsdata.array();
     QString act=data.at(0).toObject().value("sender").toString();
     //如果当前展示页面为聊天界面，推送至聊天界面
-    qDebug()<<"sender: "<<act;
     if(tempWidget)
         qDebug()<<"tw: "<<typeid(*tempWidget).name();
     ChatWidget* cw=dynamic_cast<ChatWidget*>(tempWidget);
@@ -164,6 +165,22 @@ void MainScene::sendHandler(DataHead &head, DataResult &result)
         cw->reciver(act, data);
     }
     //更新消息列表
+    //保存
+    minstanse->savemsg(data);
+}
+
+void MainScene::loginedmsg(DataHead &head, DataResult &result)
+{
+    QJsonArray ja=result.jsdata.array();
+    if(minstanse->savemsg(ja)){
+        QJsonArray ids;
+        for(int i=0; i<ja.size(); ++i){
+            ids.append(ja.at(i).toObject().value("id"));
+        }
+        //返回id
+        DataResult r(DataResult::code_success, QJsonDocument(ids));
+        WApplication::getSocket()->sendText(head, r);
+    }
 }
 
 //点击头像展示个人资料

@@ -32,6 +32,7 @@ private:
     //获取消息
     void infoinit();
 };
+//好友显示类
 class IFriend:public QWidget{
     Q_OBJECT
 public:
@@ -44,5 +45,15 @@ private:
     QString name;
     bool online;
 };
+//消息显示类
+class IInfo:public QWidget{
+    Q_OBJECT
+public:
+private:
+    QString act;
+    //false表示好友消息，true表示群消息
+    bool group;
+};
+
 void img(QPushButton* img, const QString& act);
 #endif // INFORMATIONWIDGET_H

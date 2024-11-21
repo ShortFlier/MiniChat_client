@@ -41,6 +41,7 @@ private:
     void img(const QString& name);
     void info();
     void dismsg(Information& info);
+    void historymsg();
 };
 
 #endif // CHATWIDGET_H

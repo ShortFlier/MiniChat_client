@@ -6,6 +6,7 @@
 #include "ui_chatwidget.h"
 
 #include <QInputDialog>
+#include <QScrollBar>
 
 ChatWidget::ChatWidget(User& user, const bool& isfriend,const QString& rname, const bool& online, QWidget *parent)
     : QWidget(parent),user(user),isfriend(isfriend),online(online)
@@ -21,6 +22,7 @@ ChatWidget::ChatWidget(User& user, const bool& isfriend,const QString& rname, co
     layout=new QVBoxLayout();
     ui->contents->setLayout(layout);
     ui->scrollArea->setWidgetResizable(false);
+    historymsg();
 }
 
 
@@ -91,6 +93,15 @@ void ChatWidget::dismsg(Information &info)
     layout->addWidget(chat);
     h+=chat->height();
     ui->contents->resize(ui->contents->width(), h);
+    // 将滚动条滚动到最底部
+}
+
+void ChatWidget::historymsg()
+{
+    std::vector<Information> infos=minstanse->getInfos(user.account);
+    for(int i=0; i<infos.size(); ++i){
+        dismsg(infos.at(i));
+    }
 }
 
 void ChatWidget::on_pushButton_clicked()
