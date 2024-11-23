@@ -29,6 +29,8 @@ MainScene::MainScene(ValidConnect* vc, QWidget *parent)
     wd->addwsHandler("loginedmsg", std::bind(&MainScene::loginedmsg, this, std::placeholders::_1, std::placeholders::_2));
 
     connectss();
+
+    onlogined();
 }
 
 MainScene::~MainScene()
@@ -40,6 +42,7 @@ MainScene::~MainScene()
 
 void MainScene::uiInit()
 {
+    qDebug()<<"uiInit";
     //图标
     setWindowIcon(QIcon(":/img/app_icon.png"));
     setWindowTitle("MiniChat");
@@ -181,6 +184,18 @@ void MainScene::loginedmsg(DataHead &head, DataResult &result)
         DataResult r(DataResult::code_success, QJsonDocument(ids));
         WApplication::getSocket()->sendText(head, r);
     }
+}
+
+void MainScene::onlogined()
+{
+    DataHead head=DataHead::dataHead("friendlist");
+    QJsonObject jo;
+    jo.insert("account",WApplication::getAccount());
+    DataResult result(0, QJsonDocument(jo));
+    WebDistb::asyncWeb(WApplication::getSocket(), head, result, [this](DataHead& head,DataResult& result)->void{
+        QJsonArray ja=result.jsdata.array();
+        minstanse->myfriends(ja);
+    });
 }
 
 //点击头像展示个人资料

@@ -25,6 +25,8 @@ public:
     static QByteArray* uimgload(const QString& path);
     //保存用户头像
     static void uimgsave(const QString& account, QByteArray& data);
+    //聊天图片发送小于1MB
+    static QByteArray* sendimg(const QString& path){return uimgload(path);}
 
     //下载一个用户头像，fun为头像下载成功后执行的回调函数类型为void()
     template <typename Fun>

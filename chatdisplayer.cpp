@@ -47,10 +47,28 @@ void ChatDisplayer::content(Information &info)
         text->document()->adjustSize(); // 更新文档的大小
         text->setFixedHeight(text->document()->size().width());
         if(info.sender==WApplication::getAccount()){//右边显示
-            text->move(pos()+QPoint(width(),0)-QPoint(40,0)-QPoint(text->width(),0));
+            text->move(pos()+QPoint(width(),0)-QPoint(45,0)-QPoint(text->width(),0));
         }
         text->setDisabled(true);
-    }else{
-
+    }else{//显示图片
+        QImage img(info.msg);
+        ui->text->hide();
+        QPushButton* disimg=new QPushButton(this);
+        disimg->move(pos()+QPoint(45,0));
+        if(img.width()>1.3*img.height()){
+            disimg->resize(150,100);
+        }else if(img.height()>1.3*img.width()){
+            disimg->resize(100,150);
+        }else{
+            disimg->resize(150,150);
+        }
+        resize(width(), disimg->height());
+        img = img.scaled(disimg->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        QIcon icon(QPixmap::fromImage(img));
+        disimg->setIcon(icon);
+        disimg->setIconSize(disimg->size());
+        if(info.sender==WApplication::getAccount()){//右边显示
+            disimg->move(pos()+QPoint(width(),0)-QPoint(45,0)-QPoint(disimg->width(),0));
+        }
     }
 }

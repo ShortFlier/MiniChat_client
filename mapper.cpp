@@ -1,4 +1,5 @@
 #include "mapper.h"
+#include "wapplication.h"
 
 #include <QDebug>
 #include <QFile>
@@ -54,6 +55,11 @@ void Mapper::init()
                    ");");
     if(!b)
         qDebug() << "Error: query create informations:" << query.lastError().text();
+    b=query.exec("create table friends( "
+                   "account varchar(11) primary key, \n"
+                   "name varchar(20) not null);");
+    if(!b)
+        qDebug() << "Error: query create friends:" << query.lastError().text();
     pool->append(db);
 }
 
@@ -108,7 +114,8 @@ std::vector<Information> Mapper::getInfos(const QString &act)
 {
     QString sql="select id, sender, reciver, time, type, msg "
                   "from informations "
-                  "where sender=%1 or reciver=%2";
+                  "where sender=%1 or reciver=%2 "
+                  "order by time";
     sql=sql.arg(act).arg(act);
     std::vector<Information> infos;
     QSqlDatabase db=pool->getdb();
@@ -130,6 +137,86 @@ std::vector<Information> Mapper::getInfos(const QString &act)
     return infos;
 }
 
+bool Mapper::myfriends(QJsonArray &ja)
+{
+    if(ja.size()){
+        QStringList frs;
+        for(int i=0; i<ja.size(); ++i){
+            QString act=ja.at(i).toObject().value("account").toString();
+            QString nm=ja.at(i).toObject().value("name").toString();
+            frs.append("(\'"+act+"\',\'"+nm+"\')");
+        }
+        QString sql="insert into friends(account,name) values "+frs.join(",");
+        qDebug()<<sql;
+        QSqlDatabase db=pool->getdb();
+        if(!db.transaction()){
+            qDebug()<<"Error: transaction "<<db.lastError().text();
+            pool->append(db);
+            return false;
+        }
+        QSqlQuery query(db);
+        if(!query.exec("delete from friends")){
+            db.rollback();
+            qDebug()<<"Error: delete friends "<<query.lastError().text();
+            pool->append(db);
+            return false;
+        }
+        if(!query.exec(sql)){
+            db.rollback();
+            qDebug()<<"Error: myfriend "<<query.lastError().text();
+            pool->append(db);
+            return false;
+        }
+        if(!db.commit()){
+            qDebug()<<"Error: commit "<<db.lastError().text();
+            pool->append(db);
+            return false;
+        }
+    }
+    return true;
+}
+
+QJsonArray Mapper::lastmsg()
+{
+    QSqlDatabase db=pool->getdb();
+    QSqlQuery query(db);
+    QJsonArray ja;
+    //查询好友
+    QString sql="select account,name from friends";
+    if(query.exec(sql)){
+        while(query.next()){
+            QJsonObject jo;
+            jo.insert("account",query.value(0).toLongLong());
+            jo.insert("name",query.value(1).toString());
+            ja.append(jo);
+        }
+    }else
+        qDebug()<<"Error: lastmsg friend "<<query.lastError().text();
+    //查询最后一次聊天记录
+    QString psql="select id, time, type, msg "
+        "from informations "
+        "where sender=%1 or reciver=%2 "
+        " order by time desc";
+    QJsonArray jas;
+    for(int i=0; i<ja.size(); ++i){
+        QString act=QString::number(ja.at(i).toObject().value("account").toInteger());
+        sql=psql.arg(act).arg(act);
+        if(query.exec(sql)&&query.next()){
+            QJsonObject jo;
+            jo.insert("account",ja.at(i).toObject().value("account"));
+            jo.insert("name",ja.at(i).toObject().value("name").toString());
+            jo.insert("id",query.value(0).toString());
+            jo.insert("time", query.value(1).toString());
+            jo.insert("type", query.value(2).toString());
+            jo.insert("msg", query.value(3).toString());
+            jas.append(jo);
+        }else
+            qDebug()<<"Error: lastmsg "<<query.lastError().text();
+    }
+    pool->append(db);
+    return jas;
+}
+
 DataBasePool::DataBasePool(const QString &account, int size)
 {
     this->size=size;
@@ -146,17 +233,21 @@ DataBasePool::DataBasePool(const QString &account, int size)
 
 DataBasePool::~DataBasePool()
 {
-    while(true){
-        QMutexLocker<QMutex> locker(&mutex);
-        if(dbs.size()==size){
-            for(QSqlDatabase& db : dbs){
-                db.close();
-                QSqlDatabase::removeDatabase(db.databaseName());
-            }
-            qDebug()<<"database close!";
-            return;
-        }else
-            cdtion.wait(&mutex);
+    // while(true){
+    //     QMutexLocker<QMutex> locker(&mutex);
+    //     if(dbs.size()==size){
+    //         for(QSqlDatabase& db : dbs){
+    //             db.close();
+    //             QSqlDatabase::removeDatabase(db.databaseName());
+    //         }
+    //         qDebug()<<"database close!";
+    //         return;
+    //     }else
+    //         cdtion.wait(&mutex);
+    // }
+    for(QSqlDatabase& db : dbs){
+        db.close();
+        QSqlDatabase::removeDatabase(db.databaseName());
     }
 }
 

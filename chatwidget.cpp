@@ -7,6 +7,8 @@
 
 #include <QInputDialog>
 #include <QScrollBar>
+#include <QMessageBox>
+#include <QFileDialog>
 
 ChatWidget::ChatWidget(User& user, const bool& isfriend,const QString& rname, const bool& online, QWidget *parent)
     : QWidget(parent),user(user),isfriend(isfriend),online(online)
@@ -57,6 +59,7 @@ void ChatWidget::img(const QString &name)
     ui->img->setIconSize(QSize(ui->img->width(), ui->img->height()));
 
     ui->send->setIcon(QIcon(":/img/send.png"));
+    ui->sendimg->setIcon(QIcon(":/img/image.png"));
 }
 
 void ChatWidget::info()
@@ -107,14 +110,19 @@ void ChatWidget::historymsg()
 void ChatWidget::on_pushButton_clicked()
 {
     if(isfriend){//删除好友
-        DataHead head=DataHead::dataHead("dlefriend");
-        QJsonObject jo;
-        jo.insert("account", WApplication::getAccount());
-        jo.insert("friend", user.account);
-        DataResult result(0,QJsonDocument(jo));
-        WApplication::getSocket()->sendText(head,result);
-        isfriend=false;
-        info();
+        auto reply = QMessageBox::question(nullptr, "确认删除",
+                                      "您确定要删除此好友吗？",
+                                      QMessageBox::Yes | QMessageBox::No);
+        if(reply == QMessageBox::Yes){
+            DataHead head=DataHead::dataHead("dlefriend");
+            QJsonObject jo;
+            jo.insert("account", WApplication::getAccount());
+            jo.insert("friend", user.account);
+            DataResult result(0,QJsonDocument(jo));
+            WApplication::getSocket()->sendText(head,result);
+            isfriend=false;
+            info();
+        }
     }else{//加为好友
         bool ok=false;
         QString note=QInputDialog::getText(nullptr, "加为好友", "备注", QLineEdit::Normal, QString(), &ok);
@@ -160,6 +168,34 @@ void ChatWidget::on_send_clicked()
         //显示
         dismsg(info);
         ui->textEdit->setText(QString());
+    }
+}
+
+
+void ChatWidget::on_sendimg_clicked()
+{
+    QString path=QFileDialog::getOpenFileName(nullptr, "选择图片", "", "图像文件 (*.png *.jpg *.bmp)");
+    if(!path.isEmpty()){
+        QByteArray* data=FileManager::sendimg(path);
+        if(!data) return;
+        Information info;
+        info.sender=WApplication::getAccount();
+        info.reciver=user.account;
+        info.type=INFO_IMGE;
+        info.msg=path;
+        QJsonObject jo;
+        jo.insert("reciver", user.account);
+        jo.insert("sender", WApplication::getAccount());
+        jo.insert("type", INFO_IMGE);
+        QJsonDocument jd(jo);
+        DataHead head=DataHead::wsHead("sendimg");
+        //发送
+        WApplication::getSocket()->sendBinary(head,jd,*data);
+        //保存本地
+        minstanse->newmsg(info);
+        //显示
+        dismsg(info);
+        delete data;
     }
 }
 

@@ -12,5 +12,6 @@
         <file>img/check.png</file>
         <file>img/ring.png</file>
         <file>img/send.png</file>
+        <file>img/image.png</file>
     </qresource>
 </RCC>

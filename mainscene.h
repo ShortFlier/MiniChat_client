@@ -45,6 +45,7 @@ public:
     void sendHandler(DataHead&,DataResult&);
     //登入后接收消息
     void loginedmsg(DataHead&,DataResult&);
+    void onlogined();
 
 private slots:
     void on_img_clicked();
@@ -59,7 +60,6 @@ private slots:
 
 signals:
     void quit();
-
 
 private:
     Ui::MainScene *ui;

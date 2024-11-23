@@ -1,6 +1,7 @@
 #include "datahead.h"
 #include "informationwidget.h"
 #include "filemanager.h"
+#include "mapper.h"
 #include "ui_informationwidget.h"
 #include "wapplication.h"
 
@@ -18,14 +19,15 @@ InformationWidget::InformationWidget(QWidget *parent)
 
     setFixedWidth(320);
 
-    info=new QVBoxLayout(ui->infoctn);
-    ui->infoctn->setLayout(info);
+
+    info = ui->infoctn;
     grp=new QVBoxLayout(ui->grpctn);
     ui->grpctn->setLayout(grp);
     frd=new QVBoxLayout(ui->frdctn);
     ui->frdctn->setLayout(frd);
 
     frdinit();
+    infoinit();
 }
 
 InformationWidget::~InformationWidget()
@@ -69,7 +71,23 @@ void InformationWidget::grpinit()
 
 void InformationWidget::infoinit()
 {
+    QJsonArray data=minstanse->lastmsg();
+    for(int i=0; i<data.size(); ++i){
+        QJsonObject jo=data.at(i).toObject();
+        addinfo(jo);
+    }
+}
 
+void InformationWidget::addinfo(QJsonObject &jo)
+{
+    IInfo* i=new IInfo(jo,info);
+    QPoint p=info->pos();
+    i->move(p+QPoint(infosize*30,0));
+    ++infosize;
+    info->resize(300,infosize*30);
+    connect(i, &IInfo::chat,[this](const QString& act, bool online, const QString& name){
+        emit userchat(act,online,name);
+    });
 }
 
 IFriend::IFriend(const QJsonObject& jo, QWidget *parent ):QWidget(parent)
@@ -117,4 +135,32 @@ void img(QPushButton *img, const QString &act)
     QIcon icon(QPixmap::fromImage(image));
     img->setIcon(icon);
     img->setIconSize(QSize(img->width(), img->height()));
+}
+
+IInfo::IInfo(QJsonObject &jo, QWidget *parent):QWidget(parent)
+{
+    act=QString::number(jo.value("account").toInteger());
+    name=jo.value("name").toString();
+    resize(300,30);
+    QPushButton* btn=new QPushButton(this);
+    btn->resize(30,30);
+    img(btn, jo.value("account").toString());
+    QLabel* lname=new QLabel(name, this);
+    lname->move(pos()+QPoint(35,0));
+    lname->setStyleSheet("QLabel{font-size:14px;color:rgb(0, 170, 255);font-weight:bold;}");
+    QString msg=jo.value("msg").toString();
+    QLabel* lmsg=new QLabel(msg,this);
+    lmsg->setFixedWidth(200);
+    lmsg->move(pos()+QPoint(35, 18));
+    lmsg->setStyleSheet("QLabel{font-size:10px;}");
+    QString time=jo.value("time").toString();
+    QLabel* ltime=new QLabel(time,this);
+    ltime->move(pos()+QPoint(170,0));
+}
+
+void IInfo::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        emit chat(act, false, name);
+    }
 }

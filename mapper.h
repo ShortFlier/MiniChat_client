@@ -40,6 +40,9 @@ public:
     bool savemsg(QJsonArray& ja);
     //获取消息
     std::vector<Information> getInfos(const QString& act);
+    //好友表
+    bool myfriends(QJsonArray& ja);
+    QJsonArray lastmsg();
 
 signals:
 

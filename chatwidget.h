@@ -30,6 +30,8 @@ private slots:
 
     void on_send_clicked();
 
+    void on_sendimg_clicked();
+
 private:
     Ui::ChatWidget *ui;
     User user;

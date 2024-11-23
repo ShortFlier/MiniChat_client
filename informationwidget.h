@@ -24,13 +24,15 @@ private:
     Ui::InformationWidget *ui;
     QVBoxLayout* frd;
     QVBoxLayout* grp;
-    QVBoxLayout* info;
+    QWidget* info;
+    int infosize=0;
     //获取好友列表
     void frdinit();
     //获取群列表
     void grpinit();
     //获取消息
     void infoinit();
+    void addinfo(QJsonObject&);
 };
 //好友显示类
 class IFriend:public QWidget{
@@ -49,8 +51,13 @@ private:
 class IInfo:public QWidget{
     Q_OBJECT
 public:
+    IInfo(QJsonObject& jo, QWidget *parent = nullptr);
+    void mousePressEvent(QMouseEvent *event) override;
+signals:
+    void chat(const QString& act, bool online, const QString& name);
 private:
     QString act;
+    QString name;
     //false表示好友消息，true表示群消息
     bool group;
 };

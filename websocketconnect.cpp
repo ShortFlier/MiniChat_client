@@ -36,6 +36,8 @@ void WebSocketConnect::sendBinary(DataHead &head, QJsonDocument& jd, QByteArray&
     QByteArray h=path.toUtf8();
     if(h.length()>HLENGTH){
         QMessageBox::critical(nullptr, "error", "数据同步大于"+QString::number(HLENGTH)+"字节");
+        qDebug()<<path;
+        qDebug()<<path.length();
         return;
     }
     h.resize(HLENGTH);
