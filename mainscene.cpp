@@ -20,6 +20,9 @@ MainScene::MainScene(ValidConnect* vc, QWidget *parent)
     this->vc=vc;
     status(true);
 
+    dc=new DownConnect(vc->getAccount());
+    connect(dc, &DownConnect::newchatmsg, this, &MainScene::newchatmsg);
+
     uiInit();
 
     //处理函数
@@ -38,6 +41,7 @@ MainScene::~MainScene()
     delete ui;
     vc->disconnect();
     delete vc;
+    delete dc;
 }
 
 void MainScene::uiInit()
@@ -160,16 +164,11 @@ void MainScene::sendHandler(DataHead &head, DataResult &result)
 {
     QJsonArray data=result.jsdata.array();
     QString act=data.at(0).toObject().value("sender").toString();
-    //如果当前展示页面为聊天界面，推送至聊天界面
-    if(tempWidget)
-        qDebug()<<"tw: "<<typeid(*tempWidget).name();
-    ChatWidget* cw=dynamic_cast<ChatWidget*>(tempWidget);
-    if(cw){
-        cw->reciver(act, data);
-    }
-    //更新消息列表
     //保存
     minstanse->savemsg(data);
+    //如果当前展示页面为聊天界面，推送至聊天界面
+    newchatmsg(act, data);
+    //更新消息列表
 }
 
 void MainScene::loginedmsg(DataHead &head, DataResult &result)
@@ -196,6 +195,16 @@ void MainScene::onlogined()
         QJsonArray ja=result.jsdata.array();
         minstanse->myfriends(ja);
     });
+}
+
+void MainScene::newchatmsg(QString &act, QJsonArray &data)
+{
+    if(tempWidget)
+        qDebug()<<"tw: "<<typeid(*tempWidget).name();
+    ChatWidget* cw=dynamic_cast<ChatWidget*>(tempWidget);
+    if(cw){
+        cw->reciver(act, data);
+    }
 }
 
 //点击头像展示个人资料

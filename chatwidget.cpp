@@ -97,6 +97,7 @@ void ChatWidget::dismsg(Information &info)
     h+=chat->height();
     ui->contents->resize(ui->contents->width(), h);
     // 将滚动条滚动到最底部
+    ui->scrollArea->verticalScrollBar()->setValue(ui->scrollArea->verticalScrollBar()->value());
 }
 
 void ChatWidget::historymsg()

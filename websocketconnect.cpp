@@ -2,17 +2,20 @@
 
 #include <QFile>
 
+int WebSocketConnect::pid=0;
+
 WebSocketConnect::WebSocketConnect(QObject *parent)
     : QObject{parent}
 {
+    id=++pid;
     socket=new QWebSocket("ws://example.com");
     connectToServer();
     connect(socket, &QWebSocket::connected, [this](){
-        qDebug()<<"连接建立";
+        qDebug()<<"连接建立"<<id;
         emit connected();
     });
     connect(socket, &QWebSocket::disconnected, [this](){
-        qDebug()<<"连接断开";
+        qDebug()<<"连接断开"<<id;
         emit closed();
         connectToServer();
     });
@@ -30,7 +33,7 @@ void WebSocketConnect::sendText(DataHead &head, DataResult &result)
     socket->sendTextMessage(head.getUrl()+result.data());
 }
 
-void WebSocketConnect::sendBinary(DataHead &head, QJsonDocument& jd, QByteArray& data)
+void WebSocketConnect::sendBinary(DataHead &head, QJsonDocument &jd, QByteArray &data)
 {
     QString path=head.getUrl()+jd.toJson();
     QByteArray h=path.toUtf8();
@@ -43,6 +46,8 @@ void WebSocketConnect::sendBinary(DataHead &head, QJsonDocument& jd, QByteArray&
     h.resize(HLENGTH);
     socket->sendBinaryMessage(h+data);
 }
+
+
 
 QUrl WebSocketConnect::loadServerAddresss()
 {
@@ -66,14 +71,14 @@ QUrl WebSocketConnect::loadServerAddresss()
 void WebSocketConnect::connectToServer()
 {
     socket->open(loadServerAddresss());
-    qDebug()<<"尝试连接服务器";
+    qDebug()<<"尝试连接服务器"<<id;
 }
 
 WebSocketConnect::~WebSocketConnect(){
     if(socket!=nullptr){
         emit closed();
         socket->close();
-        qDebug()<<"连接已关闭";
+        qDebug()<<"连接已关闭"<<id;
         socket->deleteLater();
     }
 }

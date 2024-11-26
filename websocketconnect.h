@@ -31,6 +31,10 @@ protected:
 
 private:
     void connectToServer();
+
+    int id;
+
+    static int pid;
 };
 
 #endif // WEBSOCKETCONNECT_H

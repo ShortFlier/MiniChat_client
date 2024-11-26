@@ -1,6 +1,7 @@
 #ifndef MAINSCENE_H
 #define MAINSCENE_H
 
+#include "downconnect.h"
 #include "informationwidget.h"
 #include "validconnect.h"
 #include "webdistb.h"
@@ -46,6 +47,8 @@ public:
     //登入后接收消息
     void loginedmsg(DataHead&,DataResult&);
     void onlogined();
+    //新的用户聊天消息
+    void newchatmsg(QString& act,QJsonArray& data);
 
 private slots:
     void on_img_clicked();
@@ -68,6 +71,7 @@ private:
     InformationWidget* ifwd;
     QWidget* display;
     QWidget* tempWidget=nullptr;
+    DownConnect* dc=nullptr;
 };
 
 #endif // MAINSCENE_H

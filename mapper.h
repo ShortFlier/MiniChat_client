@@ -43,6 +43,8 @@ public:
     //好友表
     bool myfriends(QJsonArray& ja);
     QJsonArray lastmsg();
+    //接收的图片
+    bool reciverimg(Information& info);
 
 signals:
 
@@ -55,6 +57,7 @@ private:
     void init();
     QString account;
     DataBasePool* pool=nullptr;
+
 
     static Mapper* m;
 };

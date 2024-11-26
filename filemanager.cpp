@@ -37,6 +37,19 @@ void FileManager::uimgsave(const QString &account, QByteArray &data)
         qDebug()<<"uimgsave 文件写入错误:"<<path;
 }
 
+bool FileManager::savechatimg(const QString&name, QByteArray &data)
+{
+    QString path=CHATIMG_DIR+name;
+    QFile file(path);
+    file.open(QIODeviceBase::WriteOnly);
+    if(file.isOpen()){
+        file.write(data);
+        return true;
+    }else
+        qDebug()<<"savechatimg 文件写入错误:"<<path;
+    return false;
+}
+
 
 QString getImage(const QString &path)
 {

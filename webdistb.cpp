@@ -65,12 +65,12 @@ void WebDistb::binaryHandler(const QByteArray &data)
     //请求路径
     QString path=h.left(i);
     DataHead head(path);
+    //数据部分
+    QByteArray d=data.mid(HLENGTH);
     //状态码
     QByteArray c=h.mid(i+2);
     i=c.indexOf(DataHead::sepe.toUtf8());
     int code = (c.mid(0,i)).toInt();
-    //数据部分
-    QByteArray d=data.mid(HLENGTH);
 
     long id=(head._tpid)->toLong();
     if(id_bfun.contains(id)){

@@ -50,8 +50,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         notifywidget.h notifywidget.cpp notifywidget.ui
         mapper.h mapper.cpp
         chatdisplayer.h chatdisplayer.cpp chatdisplayer.ui
-
-
+        downconnect.h downconnect.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET chat_client APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

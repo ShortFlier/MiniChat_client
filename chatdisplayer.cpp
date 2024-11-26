@@ -49,9 +49,12 @@ void ChatDisplayer::content(Information &info)
         if(info.sender==WApplication::getAccount()){//右边显示
             text->move(pos()+QPoint(width(),0)-QPoint(45,0)-QPoint(text->width(),0));
         }
-        text->setDisabled(true);
+        text->setReadOnly(true);
     }else{//显示图片
-        QImage img(info.msg);
+        QString path=info.msg;
+        if(!info.msg.contains('/'))
+            path=CHATIMG_DIR+path;
+        QImage img(path);
         ui->text->hide();
         QPushButton* disimg=new QPushButton(this);
         disimg->move(pos()+QPoint(45,0));

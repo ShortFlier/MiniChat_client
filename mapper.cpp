@@ -10,6 +10,7 @@
 #include <vector>
 
 #define DBNAME "./assets/database/db"+account+".db"
+#define IMAGE_TAIL ".jpg"
 
 Mapper* Mapper::m=new Mapper();
 
@@ -64,6 +65,7 @@ void Mapper::init()
 }
 
 
+
 bool Mapper::newmsg(Information& info){
     QString sql="insert into informations(sender,reciver,time,type,msg)\n"
                   "values(:sender,:reciver,:time,:type,:msg)";
@@ -102,6 +104,7 @@ bool Mapper::savemsg(QJsonArray &ja)
     sql=sql+v;
     QSqlDatabase db=pool->getdb();
     QSqlQuery query(db);
+    qDebug()<<sql;
     bool b=query.exec(sql);
     if(!b){
         qDebug()<< "Error savemsg:" << query.lastError().text();
@@ -215,6 +218,23 @@ QJsonArray Mapper::lastmsg()
     }
     pool->append(db);
     return jas;
+}
+
+bool Mapper::reciverimg(Information &info)
+{
+    QString sql="insert into informations(sender, reciver, time, type, msg) values";
+    QString str="(\'"+info.sender+"\',\'"+info.reciver+"\',\'"+info.time.toString("yyyy-MM-dd HH:mm:ss")+"\',\'"+info.type+"\',\'"+info.msg+"\')";
+    sql=sql+str;
+    qDebug()<<"reciverimg sql:";
+    qDebug()<<sql;
+    QSqlDatabase db=pool->getdb();
+    QSqlQuery query(db);
+    if(!query.exec(sql)){
+        qDebug()<<"Error: reciverimg "<<query.lastError().text();
+        return false;
+    }
+    pool->append(db);
+    return true;
 }
 
 DataBasePool::DataBasePool(const QString &account, int size)
